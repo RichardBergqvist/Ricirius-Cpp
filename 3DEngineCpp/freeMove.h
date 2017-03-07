@@ -5,15 +5,14 @@
 #include "gameComponent.h"
 #include "input.h"
 
-class FreeMove : public GameComponent
-{
+class FreeMove : public GameComponent {
 public:
 	FreeMove(float speed = 10.0f, int forwardKey = Input::KEY_W, int backKey = Input::KEY_S, int leftKey = Input::KEY_A, int rightKey = Input::KEY_D);
 	
-	virtual void Input(float delta);
+	virtual void input(float delta);
 protected:
 private:
-	void Move(const Vector3f& direction, float amt);
+	void move(const Vector3f& direction, float amt);
 
 	float m_speed;
 	int m_forwardKey;

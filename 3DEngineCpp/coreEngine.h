@@ -1,35 +1,34 @@
 #ifndef COREENGINE_H
 #define COREENGINE_H
 
-#include "renderingEngine.h"
+#include "graphicsEngine.h"
 #include <string>
 class Game;
 
-class CoreEngine
-{
+class CoreEngine {
 public:
 	CoreEngine(int width, int height, double frameRate, Game* game);
 	virtual ~CoreEngine();
 	
-	void CreateWindow(const std::string& title);
+	void createWindow(const std::string& title);
 	
-	void Start();
-	void Stop();
+	void start();
+	void stop();
 	
-	inline RenderingEngine* GetRenderingEngine() { return m_renderingEngine; }
+	inline GraphicsEngine* getGraphicsEngine() { return m_graphicsEngine; }
 protected:
 private:
 	CoreEngine(const CoreEngine& other) {}
 	void operator=(const CoreEngine& other) {}
 	
-	void Run();
+	void run();
 	
 	bool m_isRunning;
 	int m_width;
 	int m_height;
 	double m_frameTime;
 	Game* m_game;
-	RenderingEngine* m_renderingEngine;
+	GraphicsEngine* m_graphicsEngine;
 };
 
 #endif // COREENGINE_H

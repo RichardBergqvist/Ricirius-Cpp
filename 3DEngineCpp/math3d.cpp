@@ -1,11 +1,11 @@
 #include "math3d.h"
 
-Vector3f Vector3f::Rotate(const Quaternion& rotation) const
+Vector3f Vector3f::rotate(const Quaternion& rotation) const
 {
-	Quaternion conjugateQ = rotation.Conjugate();
+	Quaternion conjugateQ = rotation.conjugate();
 	Quaternion w = rotation * (*this) * conjugateQ;
 
-	Vector3f ret(w.GetX(), w.GetY(), w.GetZ());
+	Vector3f ret(w.getX(), w.getY(), w.getZ());
 
 	return ret;
 }

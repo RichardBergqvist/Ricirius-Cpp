@@ -6,18 +6,15 @@ static SDL_Window* window;
 static SDL_GLContext glContext;
 static bool isCloseRequested = false;
 
-bool SDLGetIsCloseRequested()
-{
+bool SDLGetIsCloseRequested() {
 	return isCloseRequested;
 }
 
-void SDLSetIsCloseRequested(bool value)
-{
+void SDLSetIsCloseRequested(bool value) {
 	isCloseRequested = value;
 }
 
-void SDLCreateWindow(const char* title, int x, int y, int width, int height, bool fullscreen)
-{
+void SDLCreateWindow(const char* title, int x, int y, int width, int height, bool fullscreen) {
 	int mode = 0;
 
 	if(fullscreen)
@@ -26,12 +23,10 @@ void SDLCreateWindow(const char* title, int x, int y, int width, int height, boo
 	window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | mode);
 	glContext = SDL_GL_CreateContext(window);
 
-	//SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
 	SDL_GL_SetSwapInterval(1);
 }
 
-void SDLSetWindowFullscreen(bool value)
-{
+void SDLSetWindowFullscreen(bool value) {
 	int mode = 0;
 	if(value)
 		mode = SDL_WINDOW_FULLSCREEN;
@@ -41,13 +36,11 @@ void SDLSetWindowFullscreen(bool value)
 	SDL_SetWindowFullscreen(window, mode);
 }
 
-void SDLSwapBuffers()
-{
+void SDLSwapBuffers() {
 	SDL_GL_SwapWindow(window);
 }
 
-void SDLDestroyWindow()
-{
+void SDLDestroyWindow() {
 	if(!window)
 		return;
 
@@ -55,7 +48,6 @@ void SDLDestroyWindow()
 	SDL_DestroyWindow(window);
 }
 
-void SDLSetMousePosition(int x, int y)
-{
+void SDLSetMousePosition(int x, int y) {
 	SDL_WarpMouseInWindow(window, x, y);
 }

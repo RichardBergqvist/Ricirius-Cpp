@@ -18,54 +18,48 @@ static bool mouseInput[NUM_MOUSEBUTTONS];
 static bool downMouse[NUM_MOUSEBUTTONS];
 static bool upMouse[NUM_MOUSEBUTTONS];
 
-void Input::Update()
-{
-	for(int i = 0; i < NUM_MOUSEBUTTONS; i++)
-	{
+void Input::update() {
+	for(int i = 0; i < NUM_MOUSEBUTTONS; i++) {
 		downMouse[i] = false;
 		upMouse[i] = false;
 	}
 
-	for(int i = 0; i < NUM_KEYS; i++)
-	{
+	for(int i = 0; i < NUM_KEYS; i++) {
 		downKeys[i] = false;
 		upKeys[i] = false;
 	}
 
-	while(SDL_PollEvent(&e))
-	{
+	while(SDL_PollEvent(&e)) {
 		if(e.type == SDL_QUIT)
 			SDLSetIsCloseRequested(true);
 
-		if(e.type == SDL_MOUSEMOTION)
-		{
+		if(e.type == SDL_MOUSEMOTION) {
 			mouseX = e.motion.x;
 			mouseY = e.motion.y;
 		}
 
-		if(e.type == SDL_KEYDOWN)
-		{
+		if(e.type == SDL_KEYDOWN) {
 			int value = e.key.keysym.scancode;
 
 			inputs[value] = true;
 			downKeys[value] = true;
 		}
-		if(e.type == SDL_KEYUP)
-		{
+
+		if(e.type == SDL_KEYUP) {
 			int value = e.key.keysym.scancode;
 
 			inputs[value] = false;
 			upKeys[value] = true;
 		}
-		if(e.type == SDL_MOUSEBUTTONDOWN)
-		{
+
+		if(e.type == SDL_MOUSEBUTTONDOWN) {
 			int value = e.button.button;
 
 			mouseInput[value] = true;
 			downMouse[value] = true;
 		}
-		if(e.type == SDL_MOUSEBUTTONUP)
-		{
+
+		if(e.type == SDL_MOUSEBUTTONUP) {
 			int value = e.button.button;
 
 			mouseInput[value] = false;
@@ -74,43 +68,43 @@ void Input::Update()
 	}
 }
 
-bool Input::GetKey(int keyCode)
+bool Input::getKey(int keyCode)
 {
 	return inputs[keyCode];
 }
 
-bool Input::GetKeyDown(int keyCode)
+bool Input::getKeyDown(int keyCode)
 {
 	return downKeys[keyCode];
 }
 
-bool Input::GetKeyUp(int keyCode)
+bool Input::getKeyUp(int keyCode)
 {
 	return upKeys[keyCode];
 }
 
-bool Input::GetMouse(int button)
+bool Input::getMouse(int button)
 {
 	return mouseInput[button];
 }
 
-bool Input::GetMouseDown(int button)
+bool Input::getMouseDown(int button)
 {
 	return downMouse[button];
 }
 
-bool Input::GetMouseUp(int button)
+bool Input::getMouseUp(int button)
 {
 	return upMouse[button];
 }
 
-Vector2f Input::GetMousePosition()
+Vector2f Input::getMousePosition()
 {
 	Vector2f res((float)mouseX,(float)mouseY);
 	return res;
 }
 
-void Input::SetCursor(bool visible)
+void Input::setCursor(bool visible)
 {
 	if(visible)
 		SDL_ShowCursor(1);
@@ -118,7 +112,7 @@ void Input::SetCursor(bool visible)
 		SDL_ShowCursor(0);
 }
 
-void Input::SetMousePosition(Vector2f pos)
+void Input::setMousePosition(Vector2f pos)
 {
-	SDLSetMousePosition((int)pos.GetX(), (int)pos.GetY());
+	SDLSetMousePosition((int)pos.getX(), (int)pos.getY());
 }

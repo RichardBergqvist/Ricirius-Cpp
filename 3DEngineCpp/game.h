@@ -4,22 +4,21 @@
 #include "gameObject.h"
 #include "coreEngine.h"
 
-class Game
-{
+class Game {
 public:
 	Game() {}
 	virtual ~Game() {}
 
-	virtual void Init() {}
-	void Input(float delta);
-	void Update(float delta);
-	void Render(RenderingEngine* renderingEngine);
+	virtual void init() {}
+	void input(float delta);
+	void update(float delta);
+	void render(GraphicsEngine* graphicsEngine);
 	
-	inline GameObject& GetRoot() { return m_root; }
+	inline GameObject& getRoot() { return m_root; }
 	
-	inline void SetEngine(CoreEngine* engine) { m_root.SetEngine(engine); }
+	inline void setEngine(CoreEngine* engine) { m_root.setEngine(engine); }
 protected:
-	void AddToScene(GameObject* child) { m_root.AddChild(child); }
+	void addToScene(GameObject* child) { m_root.addChild(child); }
 private:
 	Game(Game& game) {}
 	void operator=(Game& game) {}

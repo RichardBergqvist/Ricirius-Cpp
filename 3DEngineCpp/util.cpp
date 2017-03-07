@@ -1,13 +1,11 @@
 #include "util.h"
 #include <SDL2/SDL.h>
 
-void Util::Sleep(int milliseconds)
-{
+void Util::sleep(int milliseconds) {
 	SDL_Delay(milliseconds);
 }
 
-std::vector<std::string> Util::Split(const std::string& s, char delim)
-{
+std::vector<std::string> Util::split(const std::string& s, char delim) {
 	std::vector<std::string> elems;
         
     const char* cstr = s.c_str();
@@ -15,10 +13,8 @@ std::vector<std::string> Util::Split(const std::string& s, char delim)
     unsigned int start = 0;
     unsigned int end = 0;
         
-    while(end <= strLength)
-    {
-        while(end <= strLength)
-        {
+    while(end <= strLength) {
+        while(end <= strLength) {
             if(cstr[end] == delim)
                 break;
             end++;

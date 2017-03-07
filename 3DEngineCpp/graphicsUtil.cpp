@@ -1,13 +1,11 @@
-#include "renderUtil.h"
+#include "graphicsUtil.h"
 #include <GL/glew.h>
 
-void RenderUtil::ClearScreen()
-{
+void GraphicsUtil::clearScreen() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void RenderUtil::InitGraphics()
-{
+void GraphicsUtil::initGraphics() {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	glFrontFace(GL_CW);

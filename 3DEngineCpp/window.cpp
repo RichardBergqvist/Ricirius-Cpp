@@ -7,8 +7,7 @@ int Window::s_width = 0;
 int Window::s_height = 0;
 std::string Window::s_title = "Title";
 
-void Window::Create(int width, int height, const std::string& title)
-{
+void Window::create(int width, int height, const std::string& title) {
 	Window::s_width = width;
 	Window::s_height = height;
 	Window::s_title = title;
@@ -26,49 +25,45 @@ void Window::Create(int width, int height, const std::string& title)
 	SDLCreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, false);
 
 	GLenum res = glewInit();
-	if(res != GLEW_OK)
-	{
+	if(res != GLEW_OK) {
 		fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
 	}
 }
 
-void Window::Render()
-{
+void Window::render() {
 	SDLSwapBuffers();
 }
 
-void Window::Dispose()
-{
+void Window::dispose() {
 	SDLDestroyWindow();
 	SDL_Quit();
 }
 
-bool Window::IsCloseRequested()
-{
+void Window::bindAsRenderTarget() {
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	glViewport(0, 0, getWidth(), getHeight());
+}
+
+bool Window::isCloseRequested() {
 	return SDLGetIsCloseRequested();
 }
 
-void Window::SetFullScreen(bool value)
-{
+void Window::setFullScreen(bool value) {
 	SDLSetWindowFullscreen(value);
 }
 
-int Window::GetWidth()
-{
+int Window::getWidth() {
 	return s_width;
 }
 
-int Window::GetHeight()
-{
+int Window::getHeight() {
 	return s_height;
 }
 
-float Window::GetAspect()
-{
-	return (float)GetWidth()/(float)GetHeight();
+float Window::getAspect() {
+	return (float)getWidth()/(float)getHeight();
 }
 
-const std::string& Window::GetTitle()
-{
+const std::string& Window::getTitle() {
 	return s_title;
 }

@@ -1,14 +1,15 @@
-#include "renderingEngine.h"
+#include "graphicsEngine.h"
 #include "window.h"
 #include "gameObject.h"
 #include "shader.h"
 #include <GL/glew.h>
 
-RenderingEngine::RenderingEngine()
-{
+GraphicsEngine::GraphicsEngine() {
 	m_samplerMap.insert(std::pair<std::string, unsigned int>("diffuse", 0));
+	m_samplerMap.insert(std::pair<std::string, unsigned int>("normalMap", 1));
+	m_samplerMap.insert(std::pair<std::string, unsigned int>("dispMap", 2));
 	
-	AddVector3f("ambient", Vector3f(0.1f, 0.1f, 0.1f));
+	addVector3f("ambient", Vector3f(0.1f, 0.1f, 0.1f));
 	m_defaultShader = new Shader("forward-ambient");
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -20,25 +21,24 @@ RenderingEngine::RenderingEngine()
 	glEnable(GL_DEPTH_CLAMP);
 }
 
-RenderingEngine::~RenderingEngine() 
-{
+GraphicsEngine::~GraphicsEngine() {
 	if(m_defaultShader) delete m_defaultShader;
 }
 
-void RenderingEngine::Render(GameObject* object)
-{
+void GraphicsEngine::render(GameObject* object) {
+	Window::bindAsRenderTarget();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	object->RenderAll(m_defaultShader, this);
+	object->renderAll(m_defaultShader, this);
 	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_ONE, GL_ONE);
 	glDepthMask(GL_FALSE);
 	glDepthFunc(GL_EQUAL);
 	
-	for(unsigned int i = 0; i < m_lights.size(); i++)
-	{
+	for(unsigned int i = 0; i < m_lights.size(); i++) {
 		m_activeLight = m_lights[i];
-		object->RenderAll(m_activeLight->GetShader(), this);
+		object->renderAll(m_activeLight->getShader(), this);
 	}
 	
 	glDepthMask(GL_TRUE);

@@ -1,9 +1,8 @@
 #ifndef TIME_H
 #define TIME_H
 
-namespace Time
-{
-	double GetTime();
+namespace Time {
+	double getTime();
 };
 
 #endif

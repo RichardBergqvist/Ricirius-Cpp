@@ -6,8 +6,7 @@
 
 class CoreEngine;
 
-class BaseLight : public GameComponent
-{
+class BaseLight : public GameComponent {
 public:
 	Vector3f color;
 	float intensity;
@@ -19,10 +18,10 @@ public:
 	
 	virtual ~BaseLight();
 	
-	virtual void AddToEngine(CoreEngine* engine);	
-	inline Shader* GetShader() { return m_shader; }
+	virtual void addToEngine(CoreEngine* engine);	
+	inline Shader* getShader() { return m_shader; }
 	
-	void SetShader(Shader* shader);
+	void setShader(Shader* shader);
 private:
 	BaseLight(BaseLight& other) {}
 	void operator=(BaseLight& other) {}
@@ -30,13 +29,11 @@ private:
 	Shader* m_shader;
 };
 
-struct DirectionalLight : public BaseLight
-{
+struct DirectionalLight : public BaseLight {
 	DirectionalLight(const Vector3f& color = Vector3f(0,0,0), float intensity = 0);
 };
 
-struct Attenuation
-{
+struct Attenuation {
 	float constant;
 	float linear;
 	float exponent;
@@ -47,16 +44,14 @@ struct Attenuation
 		exponent(exponent) {}
 };
 
-struct PointLight : public BaseLight
-{
+struct PointLight : public BaseLight {
 	Attenuation atten;
 	float range;
 
 	PointLight(const Vector3f& color = Vector3f(0,0,0), float intensity = 0, const Attenuation& atten = Attenuation());
 };
 
-struct SpotLight : public PointLight
-{
+struct SpotLight : public PointLight {
 	float cutoff;
 
 	SpotLight(const Vector3f& color = Vector3f(0,0,0), float intensity = 0, const Attenuation& atten = Attenuation(), float cutoff = 0);

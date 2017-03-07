@@ -4,13 +4,12 @@
 #include "math3d.h"
 #include "gameComponent.h"
 
-class Camera : public GameComponent
-{
+class Camera : public GameComponent {
 public:
 	Camera(const Matrix4f& projection);
 	
-	Matrix4f GetViewProjection() const;
-	virtual void AddToEngine(CoreEngine* engine);
+	Matrix4f getViewProjection() const;
+	virtual void addToEngine(CoreEngine* engine);
 protected:
 private:
 	Matrix4f m_projection;

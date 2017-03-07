@@ -2,38 +2,37 @@
 #define GAMEOBJECT_H
 
 #include <vector>
-#include "transform.h"
+#include "transformer.h"
 class CoreEngine;
 class GameComponent;
 class Shader;
-class RenderingEngine;
+class GraphicsEngine;
 
-class GameObject
-{
+class GameObject {
 public:
 	GameObject() { m_coreEngine = 0; }
 	virtual ~GameObject();
 	
-	GameObject* AddChild(GameObject* child);
-	GameObject* AddComponent(GameComponent* component);
+	GameObject* addChild(GameObject* child);
+	GameObject* addComponent(GameComponent* component);
 	
-	void InputAll(float delta);
-	void UpdateAll(float delta);
-	void RenderAll(Shader* shader, RenderingEngine* renderingEngine);
+	void inputAll(float delta);
+	void updateAll(float delta);
+	void renderAll(Shader* shader, GraphicsEngine* graphicsEngine);
 	
-	std::vector<GameObject*> GetAllAttached();
+	std::vector<GameObject*> getAllAttached();
 	
-	inline Transform& GetTransform() { return m_transform; }
-	void SetEngine(CoreEngine* engine);
+	inline Transformer& getTransform() { return m_transformer; }
+	void setEngine(CoreEngine* engine);
 protected:
 private:
-	void Input(float delta);
-	void Update(float delta);
-	void Render(Shader* shader, RenderingEngine* renderingEngine);
+	void input(float delta);
+	void update(float delta);
+	void render(Shader* shader, GraphicsEngine* graphicsEngine);
 
 	std::vector<GameObject*> m_children;
 	std::vector<GameComponent*> m_components;
-	Transform m_transform;
+	Transformer m_transformer;
 	CoreEngine* m_coreEngine;
 };
 

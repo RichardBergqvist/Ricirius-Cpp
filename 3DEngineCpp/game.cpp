@@ -1,18 +1,15 @@
 #include "game.h"
-#include "renderingEngine.h"
+#include "graphicsEngine.h"
 #include <iostream>
 
-void Game::Input(float delta)
-{
-	m_root.InputAll(delta);
+void Game::input(float delta) {
+	m_root.inputAll(delta);
 }
 
-void Game::Update(float delta)
-{
-	m_root.UpdateAll(delta);
+void Game::update(float delta) {
+	m_root.updateAll(delta);
 }
 
-void Game::Render(RenderingEngine* renderingEngine)
-{
-	renderingEngine->Render(&m_root);
+void Game::render(GraphicsEngine* graphicsEngine) {
+	graphicsEngine->render(&m_root);
 }

@@ -3,20 +3,20 @@
 
 #include <string>
 
-class Window
-{
+class Window {
 public:
-	static void Create(int width, int height, const std::string& title);
-	static void Render();
-	static void Dispose();
+	static void create(int width, int height, const std::string& title);
+	static void render();
+	static void dispose();
+	static void bindAsRenderTarget();
 
-	static bool IsCloseRequested();
-	static int GetWidth();
-	static int GetHeight();
-	static float GetAspect();
-	static const std::string& GetTitle();
+	static bool isCloseRequested();
+	static int getWidth();
+	static int getHeight();
+	static float getAspect();
+	static const std::string& getTitle();
 
-	static void SetFullScreen(bool value);
+	static void setFullScreen(bool value);
 protected:
 private:
 	static int s_width;

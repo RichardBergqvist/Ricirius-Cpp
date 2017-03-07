@@ -1,25 +1,24 @@
 #ifndef GAMECOMPONENT_H_INCLUDED
 #define GAMECOMPONENT_H_INCLUDED
 
-#include "transform.h"
+#include "transformer.h"
 #include "gameObject.h"
-class RenderingEngine;
+class GraphicsEngine;
 class Shader;
 
-class GameComponent
-{
+class GameComponent {
 public:
 	virtual ~GameComponent() {}
 
-	virtual void Input(float delta) {}
-	virtual void Update(float delta) {}
-	virtual void Render(Shader* shader, RenderingEngine* renderingEngine) {}
+	virtual void input(float delta) {}
+	virtual void update(float delta) {}
+	virtual void render(Shader* shader, GraphicsEngine* graphicsEngine) {}
 	
-	virtual void AddToEngine(CoreEngine* engine) { }
+	virtual void addToEngine(CoreEngine* engine) { }
 	
-	inline void SetParent(GameObject* parent) { m_parent = parent; }
-	inline Transform& GetTransform() { return m_parent->GetTransform(); }
-	inline const Transform& GetTransform() const { return m_parent->GetTransform(); }
+	inline void setParent(GameObject* parent) { m_parent = parent; }
+	inline Transformer& getTransform() { return m_parent->getTransform(); }
+	inline const Transformer& getTransform() const { return m_parent->getTransform(); }
 	
 private:
 	GameObject* m_parent;

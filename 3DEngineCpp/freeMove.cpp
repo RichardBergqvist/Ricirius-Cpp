@@ -7,21 +7,19 @@ FreeMove::FreeMove(float speed, int forwardKey, int backKey, int leftKey, int ri
 	m_leftKey(leftKey),
 	m_rightKey(rightKey) {}
 	
-void FreeMove::Input(float delta)
-{
+void FreeMove::input(float delta) {
 	float movAmt = m_speed * delta;
 
-	if(Input::GetKey(m_forwardKey))
-		Move(GetTransform().GetRot().GetForward(), movAmt);
-	if(Input::GetKey(m_backKey))
-		Move(GetTransform().GetRot().GetBack(), movAmt);
-	if(Input::GetKey(m_leftKey))
-		Move(GetTransform().GetRot().GetLeft(), movAmt);
-	if(Input::GetKey(m_rightKey))
-		Move(GetTransform().GetRot().GetRight(), movAmt);
+	if(Input::getKey(m_forwardKey))
+		move(getTransform().getRot().getForward(), movAmt);
+	if(Input::getKey(m_backKey))
+		move(getTransform().getRot().getBack(), movAmt);
+	if(Input::getKey(m_leftKey))
+		move(getTransform().getRot().getLeft(), movAmt);
+	if(Input::getKey(m_rightKey))
+		move(getTransform().getRot().getRight(), movAmt);
 }
 
-void FreeMove::Move(const Vector3f& direction, float amt)
-{
-	GetTransform().SetPos(GetTransform().GetPos() + (direction * amt));
+void FreeMove::move(const Vector3f& direction, float amt) {
+	getTransform().setPos(getTransform().getPos() + (direction * amt));
 }

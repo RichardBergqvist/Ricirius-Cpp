@@ -5,12 +5,11 @@
 #include "gameComponent.h"
 #include "input.h"
 
-class FreeLook : public GameComponent
-{
+class FreeLook : public GameComponent {
 public:
 	FreeLook(float sensitivity = 0.5f, int unlockMouseKey = Input::KEY_ESCAPE);
 	
-	virtual void Input(float delta);
+	virtual void input(float delta);
 protected:
 private:
 	float m_sensitivity;
