@@ -8,18 +8,23 @@
 
 class TextureData : public ReferenceCounter {
 public:
-	TextureData(GLenum textureTarget);
+	TextureData(GLenum textureTarget, int width, int height, int numTextures, unsigned char** data, GLfloat* filters);
+
+	void bind(int textureNum);
+
 	virtual ~TextureData();
-	
-	inline GLenum getTextureTarget() { return m_textureTarget; }
-	inline GLuint getTextureID() { return m_textureID; }
 protected:	
 private:
 	TextureData(TextureData& other) {}
 	void operator=(TextureData& other) {}
 
+	void initTextures(unsigned char** data, GLfloat* filter);
+
+	GLuint* m_textureID;
 	GLenum m_textureTarget;
-	GLuint m_textureID;
+	int m_numTextures;
+	int m_width;
+	int m_height;
 };
 
 class Texture
@@ -30,6 +35,7 @@ public:
 	virtual ~Texture();
 
 	void bind(unsigned int unit = 0) const;	
+	void bindAsRenderTarget();
 protected:
 private:
 	static std::map<std::string, TextureData*> s_resourceMap;
@@ -39,8 +45,6 @@ private:
 
 	TextureData* m_textureData;
 	std::string m_fileName;
-
-	void initTexture(int width, int height, unsigned char* data, GLenum textureTarget, GLfloat filter);
 };
 
 #endif
