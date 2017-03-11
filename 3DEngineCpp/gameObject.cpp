@@ -14,7 +14,7 @@ GameObject::~GameObject() {
 
 GameObject* GameObject::addChild(GameObject* child) {
 	m_children.push_back(child); 
-	child->getTransform().setParent(&m_transformer);
+	child->getTransformer().setParent(&m_transformer);
 	child->setEngine(m_coreEngine);
 	return this;
 }

@@ -22,9 +22,9 @@ void FreeLook::input(float delta) {
 		bool rotX = deltaPos.getY() != 0;
 			
 		if(rotY)
-			getTransform().rotate(Vector3f(0,1,0), toRadians(deltaPos.getX() * m_sensitivity));
+			getTransformer().rotate(Vector3f(0,1,0), toRadians(deltaPos.getX() * m_sensitivity));
 		if(rotX)
-			getTransform().rotate(getTransform().getRot().getRight(), toRadians(deltaPos.getY() * m_sensitivity));
+			getTransformer().rotate(getTransformer().getRot().getRight(), toRadians(deltaPos.getY() * m_sensitivity));
 			
 		if(rotY || rotX)
 			Input::setMousePosition(centerPosition);

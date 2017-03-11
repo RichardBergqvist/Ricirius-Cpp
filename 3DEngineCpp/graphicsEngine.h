@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 class GameObject;
+class Model;
 
 class GraphicsEngine : public MappedValues {
 public:
@@ -35,6 +36,14 @@ private:
 	void operator=(const GraphicsEngine& other) {}
 	
 	Camera* m_mainCamera;
+	Camera* m_altCamera;
+	GameObject* m_altCameraObject;
+
+	Material* m_planeMaterial;
+	Transformer m_planeTransformer;
+	Model* m_plane;
+	Texture* m_tempTarget;
+
 	BaseLight* m_activeLight;
 	Shader* m_defaultShader;
 	std::vector<BaseLight*> m_lights;

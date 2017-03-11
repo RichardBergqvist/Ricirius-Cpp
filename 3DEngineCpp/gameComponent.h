@@ -17,8 +17,8 @@ public:
 	virtual void addToEngine(CoreEngine* engine) { }
 	
 	inline void setParent(GameObject* parent) { m_parent = parent; }
-	inline Transformer& getTransform() { return m_parent->getTransform(); }
-	inline const Transformer& getTransform() const { return m_parent->getTransform(); }
+	inline Transformer& getTransformer() { return m_parent->getTransformer(); }
+	inline const Transformer& getTransformer() const { return m_parent->getTransformer(); }
 	
 private:
 	GameObject* m_parent;

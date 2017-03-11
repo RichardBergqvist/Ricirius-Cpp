@@ -22,7 +22,7 @@ public:
 	
 	std::vector<GameObject*> getAllAttached();
 	
-	inline Transformer& getTransform() { return m_transformer; }
+	inline Transformer& getTransformer() { return m_transformer; }
 	void setEngine(CoreEngine* engine);
 protected:
 private:

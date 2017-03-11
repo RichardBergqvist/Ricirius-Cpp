@@ -11,15 +11,15 @@ void FreeMove::input(float delta) {
 	float movAmt = m_speed * delta;
 
 	if(Input::getKey(m_forwardKey))
-		move(getTransform().getRot().getForward(), movAmt);
+		move(getTransformer().getRot().getForward(), movAmt);
 	if(Input::getKey(m_backKey))
-		move(getTransform().getRot().getBack(), movAmt);
+		move(getTransformer().getRot().getBack(), movAmt);
 	if(Input::getKey(m_leftKey))
-		move(getTransform().getRot().getLeft(), movAmt);
+		move(getTransformer().getRot().getLeft(), movAmt);
 	if(Input::getKey(m_rightKey))
-		move(getTransform().getRot().getRight(), movAmt);
+		move(getTransformer().getRot().getRight(), movAmt);
 }
 
 void FreeMove::move(const Vector3f& direction, float amt) {
-	getTransform().setPos(getTransform().getPos() + (direction * amt));
+	getTransformer().setPos(getTransformer().getPos() + (direction * amt));
 }

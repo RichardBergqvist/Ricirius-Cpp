@@ -18,7 +18,7 @@ public:
 
 	virtual void render(Shader* shader, GraphicsEngine* graphicsEngine)  {
 		shader->bind();
-		shader->updateUniforms(getTransform(), *m_material, graphicsEngine);
+		shader->updateUniforms(getTransformer(), *m_material, graphicsEngine);
 		m_model->render();
 	}
 protected:
