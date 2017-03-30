@@ -1,6 +1,6 @@
 #include "3DEngine.h"
-#include "freeLook.h"
-#include "freeMove.h"
+#include "../components/freeLook.h"
+#include "../components/freeMove.h"
 
 class TestGame : public Game {
 public:
@@ -26,10 +26,13 @@ void TestGame::init() {
 	pointLightObject->addComponent(new PointLight(Vector3f(0, 1, 0), 0.4f, Attenuation(0, 0, 1)));
 	pointLightObject->getTransformer().setPos(Vector3f(7, 0, 7));
 	
-	spotLightObject->addComponent(new SpotLight(Vector3f(0, 1, 1), 0.4f, Attenuation(0, 0, 0.1f), 0.7f));
-	spotLightObject->getTransformer().setRot(Quaternion(Vector3f(0, 1, 0), toRadians(90.0f)));
+	spotLightObject->addComponent(new SpotLight(Vector3f(0, 1, 1), 0.4f, Attenuation(0, 0, 0.02f), toRadians(91.1F), 7, 1, 0.5F));
+	//spotLightObject->getTransformer().setRot(Quaternion(Vector3f(0, 1, 0), toRadians(90.0f)));
+	spotLightObject->getTransformer().rotate(Quaternion(Vector3f(0, 1, 0), toRadians(90.0F)));
+	spotLightObject->getTransformer().rotate(Quaternion(Vector3f(1, 0, 0), toRadians(-60.0F)));
+	spotLightObject->getTransformer().setPos(Vector3f(10, 1, 5));
 	
-	directionalLightObject->addComponent(new DirectionalLight(Vector3f(1, 1, 1), 0.4f));
+	directionalLightObject->addComponent(new DirectionalLight(Vector3f(1, 1, 1), 0.4f, 10, 80, 1));
 	
 	GameObject* testMesh1 = new GameObject();
 	GameObject* testMesh2 = new GameObject();
@@ -56,6 +59,13 @@ void TestGame::init() {
 		->addComponent(new FreeMove()));
 	
 	directionalLightObject->getTransformer().setRot(Quaternion(Vector3f(1, 0, 0), toRadians(-45)));
+
+	GameObject* box = new GameObject();
+	box->addComponent(new ModelRenderer(new Model("./res/models/cube.obj"), new Material(new Texture("bricks2.jpg"), 1, 8, new Texture("bricks2_normal.png"), new Texture("bricks2_disp.jpg"), 0.04F, -1.0F)));
+
+	box->getTransformer().setPos(Vector3f(14, 0, 5));
+	box->getTransformer().setRot(Quaternion(Vector3f(0, 1, 0), toRadians(30.0F)));
+	addToScene(box);
 }
 
 int main() {

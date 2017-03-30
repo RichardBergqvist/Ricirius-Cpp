@@ -15,6 +15,6 @@ uniform float dispMapBias;
 
 void main() {
     vec3 directionToEye = normalize(C_eyePos - worldPos0);
-	vec2 texCoords = CalcParallaxTexCoords(dispMap, tbnMatrix, directionToEye, texCoord0, dispMapScale, dispMapBias);
+	vec2 texCoords = calcParallaxTexCoords(dispMap, tbnMatrix, directionToEye, texCoord0, dispMapScale, dispMapBias);
 	gl_FragColor = texture2D(diffuse, texCoords) * vec4(R_ambient, 1);
 }
