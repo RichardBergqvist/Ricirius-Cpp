@@ -26,8 +26,9 @@ private:
 
 class Model {
 public:
-	Model(const std::string& fileName);
+	Model(const std::string& fileName = "cube.obj");
 	Model(Vertex* vertices, int vertSize, int* indices, int indexSize, bool calcNormals);
+	Model(const Model& model);
 	virtual ~Model();
 
 	void render() const;
@@ -35,14 +36,13 @@ protected:
 private:
 	static std::map<std::string, ModelData*> s_resourceMap;
 	
-	Model(Model& model) {}
-	void operator=(Model& model) {}
-	
-	void calcNormals(Vertex* vertices, int vertSize, int* indices, int indexSize);
+	void calcNormals(Vertex* vertices, int vertSize, int* indices, int indexSize) const;
 	void initModel(Vertex* vertices, int vertSize, int* indices, int indexSize, bool calcNormals = true);
 
 	std::string m_fileName;
 	ModelData* m_modelData;
+
+	void operator=(Model& model) {}
 };
 
 #endif

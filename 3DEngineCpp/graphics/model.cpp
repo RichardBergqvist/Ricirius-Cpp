@@ -11,10 +11,9 @@
 
 std::map<std::string, ModelData*> Model::s_resourceMap;
 
-ModelData::ModelData(int indexSize) : ReferenceCounter() {
+ModelData::ModelData(int indexSize) : ReferenceCounter(), m_size(indexSize) {
 	glGenBuffers(1, &m_vbo);
 	glGenBuffers(1, &m_ibo);
-	m_size = indexSize;
 }
 
 ModelData::~ModelData() { 
@@ -23,15 +22,11 @@ ModelData::~ModelData() {
 }
 
 
-Model::Model(Vertex* vertices, int vertSize, int* indices, int indexSize, bool calcNormals) {
-	m_fileName = "";
+Model::Model(Vertex* vertices, int vertSize, int* indices, int indexSize, bool calcNormals) : m_fileName("") {
 	initModel(vertices, vertSize, indices, indexSize, calcNormals);
 }
 
-Model::Model(const std::string& fileName) {
-	m_fileName = fileName;
-	m_modelData = 0;
-	
+Model::Model(const std::string& fileName) : m_fileName(fileName), m_modelData(0) {
 	std::map<std::string, ModelData*>::const_iterator it = s_resourceMap.find(fileName);
 	if(it != s_resourceMap.end()) {
 		m_modelData = it->second;
@@ -39,7 +34,7 @@ Model::Model(const std::string& fileName) {
 	} else {
 		Assimp::Importer importer;
 		
-		const aiScene* scene = importer.ReadFile(fileName.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
+		const aiScene* scene = importer.ReadFile(("./res/models/" + fileName).c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 		
 		if(!scene) {
 			std::cout << "Model load failed!: " << fileName << std::endl;
@@ -75,6 +70,10 @@ Model::Model(const std::string& fileName) {
 		
 		s_resourceMap.insert(std::pair<std::string, ModelData*>(fileName, m_modelData));
 	}
+}
+
+Model::Model(const Model& model) : m_fileName(model.m_fileName), m_modelData(model.m_modelData) {
+	m_modelData->addReference();
 }
 
 Model::~Model() {
@@ -120,22 +119,22 @@ void Model::render() const {
 	glDisableVertexAttribArray(3);
 }
 
-void Model::calcNormals(Vertex* vertices, int vertSize, int* indices, int indexSize) {
-	for(int i = 0; i < indexSize; i += 3) {
+void Model::calcNormals(Vertex* vertices, int vertSize, int* indices, int indexSize) const {
+	for (int i = 0; i < indexSize; i += 3) {
 		int i0 = indices[i];
 		int i1 = indices[i + 1];
 		int i2 = indices[i + 2];
-			
-		Vector3f v1 = vertices[i1].pos - vertices[i0].pos;
-		Vector3f v2 = vertices[i2].pos - vertices[i0].pos;
-		
+
+		Vector3f v1 = vertices[i1].getPos() - vertices[i0].getPos();
+		Vector3f v2 = vertices[i2].getPos() - vertices[i0].getPos();
+
 		Vector3f normal = v1.cross(v2).normalized();
-		
-		vertices[i0].normal += normal;
-		vertices[i1].normal += normal;
-		vertices[i2].normal += normal;
+
+		vertices[i0].setNormal(vertices[i0].getNormal() + normal);
+		vertices[i1].setNormal(vertices[i1].getNormal() + normal);
+		vertices[i2].setNormal(vertices[i2].getNormal() + normal);
 	}
-	
-	for(int i = 0; i < vertSize; i++)
-		vertices[i].normal = vertices[i].normal.normalized();
+
+	for (int i = 0; i < vertSize; i++)
+		vertices[i].setNormal(vertices[i].getNormal().normalized());
 }

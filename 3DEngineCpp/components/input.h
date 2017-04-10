@@ -2,6 +2,8 @@
 #define MYINPUT_H
 #include "../util/math3d.h"
 
+class Window;
+
 class Input {
 public:
 	enum {
@@ -273,22 +275,40 @@ public:
 		KEY_APP2 = 284,
 	};
 
-	static void update();
+	static const int NUM_KEYS = 512;
+	static const int NUM_MOUSEBUTTONS = 256;
 
-	static bool getKey(int keyCode);
-	static bool getKeyDown(int keyCode);
-	static bool getKeyUp(int keyCode);
+	Input(Window* window);
 
-	static bool getMouse(int button);
-	static bool getMouseDown(int button);
-	static bool getMouseUp(int button);
+	void setCursor(bool value) const;
+	void setMousePosition(const Vector2f& pos) const;
+	inline void setKey(int keyCode, bool value) { m_inputs[keyCode] = value; }
+	inline void setKeyDown(int keyCode, bool value) { m_downKeys[keyCode] = value; }
+	inline void setKeyUp(int keyCode, bool value) { m_upKeys[keyCode] = value; }
+	inline void setMouse(int keyCode, bool value) { m_mouseInput[keyCode] = value; }
+	inline void setMouseDown(int keyCode, bool value) { m_downMouse[keyCode] = value; }
+	inline void setMouseUp(int keyCode, bool value) { m_upMouse[keyCode] = value; }
+	inline void setMouseX(int value) { m_mouseX = value; }
+	inline void setMouseY(int value) { m_mouseY = value; }
 
-	static void setMousePosition(Vector2f pos);
-	static Vector2f getMousePosition();
-
-	static void setCursor(bool value);
+	inline bool getKey(int keyCode) const { return m_inputs[keyCode]; }
+	inline bool getKeyDown(int keyCode) const { return m_downKeys[keyCode]; }
+	inline bool getKeyUp(int keyCode) const { return m_upKeys[keyCode]; }
+	inline bool getMouse(int keyCode) const { return m_mouseInput[keyCode]; }
+	inline bool getMouseDown(int keyCode) const { return m_downMouse[keyCode]; }
+	inline bool getMouseUp(int keyCode) const { return m_upMouse[keyCode]; }
+	inline Vector2f getMousePosition() const { return Vector2f((float)m_mouseX, (float)m_mouseY); }
 protected:
 private:
+	bool m_inputs[NUM_KEYS];
+	bool m_downKeys[NUM_KEYS];
+	bool m_upKeys[NUM_KEYS];
+	bool m_mouseInput[NUM_MOUSEBUTTONS];
+	bool m_downMouse[NUM_MOUSEBUTTONS];
+	bool m_upMouse[NUM_MOUSEBUTTONS];
+	int  m_mouseX;
+	int  m_mouseY;
+	Window* m_window;
 };
 
 #endif

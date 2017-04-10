@@ -1,38 +1,28 @@
 #include "transformer.h"
 
-Transformer::Transformer(const Vector3f& pos, const Quaternion& rot, float scale) {
-	m_pos = pos;
-	m_rot = rot;
-	m_scale = scale;
-	m_initializedOldStuff = false;
-	m_parent = 0;
-	
-	m_parentMatrix = Matrix4f().initIdentity();
-}
-
-bool Transformer::hasChanged() {	
-	if(m_parent != 0 && m_parent->hasChanged())
-		return true;
-	
-	if(m_pos != m_oldPos)
+bool Transformer::hasChanged() {
+	if (m_parent != 0 && m_parent->hasChanged())
 		return true;
 
-	if(m_rot != m_oldRot)
+	if (m_pos != m_oldPos)
 		return true;
-	
-	if(m_scale != m_scale)
+
+	if (m_rot != m_oldRot)
 		return true;
-		
+
+	if (m_scale != m_scale)
+		return true;
+
 	return false;
 }
 
 void Transformer::update() {
-	if(m_initializedOldStuff) {
+	if (m_initializedOldStuff) {
 		m_oldPos = m_pos;
 		m_oldRot = m_rot;
 		m_oldScale = m_scale;
 	} else {
-		m_oldPos = m_pos + Vector3f(1,1,1);
+		m_oldPos = m_pos + Vector3f(1, 1, 1);
 		m_oldRot = m_rot * 0.5f;
 		m_oldScale = m_scale + 1;
 		m_initializedOldStuff = true;
@@ -63,9 +53,18 @@ Matrix4f Transformer::getTransformation() const {
 	return getParentMatrix() * result;
 }
 
-Matrix4f Transformer::getParentMatrix() const {
-	if(m_parent != 0 && m_parent->hasChanged())
+const Matrix4f& Transformer::getParentMatrix() const {
+	if (m_parent != 0 && m_parent->hasChanged())
 		m_parentMatrix = m_parent->getTransformation();
-		
+
 	return m_parentMatrix;
+}
+
+Quaternion Transformer::getTransformedRot() const {
+	Quaternion parentRot = Quaternion(0, 0, 0, 1);
+
+	if (m_parent)
+		parentRot = m_parent->getTransformedRot();
+
+	return parentRot * m_rot;
 }

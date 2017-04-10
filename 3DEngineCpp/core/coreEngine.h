@@ -18,17 +18,18 @@ public:
 	inline GraphicsEngine* getGraphicsEngine() { return m_graphicsEngine; }
 protected:
 private:
-	CoreEngine(const CoreEngine& other) {}
-	void operator=(const CoreEngine& other) {}
-	
-	void run();
-	
 	bool m_isRunning;
 	int m_width;
 	int m_height;
 	double m_frameTime;
 	Game* m_game;
 	GraphicsEngine* m_graphicsEngine;
+	Window* m_window;
+
+	void run();
+
+	CoreEngine(const CoreEngine& other) {}
+	void operator=(const CoreEngine& other) {}
 };
 
 #endif // COREENGINE_H

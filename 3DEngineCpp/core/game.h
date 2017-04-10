@@ -1,16 +1,16 @@
 #ifndef MYGAME_H
 #define MYGAME_H
 
-#include "gameObject.h"
-#include "../core/coreEngine.h"
+#include "../components/gameObject.h"
+#include "coreEngine.h"
 
 class Game {
 public:
 	Game() {}
 	virtual ~Game() {}
 
-	virtual void init() {}
-	void input(float delta);
+	virtual void init(const Window& window) {}
+	void processInput(const Input& input, float delta);
 	void update(float delta);
 	void render(GraphicsEngine* graphicsEngine);
 	

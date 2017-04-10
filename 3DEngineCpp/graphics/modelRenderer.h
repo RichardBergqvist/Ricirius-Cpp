@@ -6,25 +6,17 @@
 
 class ModelRenderer : public GameComponent {
 public:
-	ModelRenderer(Model* model, Material* material) {
-		m_model = model;
-		m_material = material;
-	}
-	
-	virtual ~ModelRenderer() {
-		if(m_model) delete m_model;
-		if(m_material) delete m_material;
-	}
+	ModelRenderer(const Model& model, const Material& material) : m_model(model), m_material(material) {}
 
-	virtual void render(Shader* shader, GraphicsEngine* graphicsEngine)  {
-		shader->bind();
-		shader->updateUniforms(getTransformer(), *m_material, graphicsEngine);
-		m_model->render();
+	virtual void render(const Shader& shader, const GraphicsEngine& graphicsEngine) const {
+		shader.bind();
+		shader.updateUniforms(getTransformer(), m_material, graphicsEngine);
+		m_model.render();
 	}
 protected:
 private:
-	Model* m_model;
-	Material* m_material;
+	Model m_model;
+	Material m_material;
 };
 
 #endif // MODELRENDERER_H_INCLUDED

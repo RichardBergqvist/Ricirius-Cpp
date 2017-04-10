@@ -1,118 +1,25 @@
 #include "input.h"
+#include "../graphics/window.h"
 #include <SDL2/SDL.h>
-#include "../util/sdl_backend.h"
+#include <cstring>
 
-const static int NUM_KEYS = 512;
-const static int NUM_MOUSEBUTTONS = 256;
+Input::Input(Window* window) : m_mouseX(0), m_mouseY(0), m_window(window) {
+	memset(m_inputs, 0, NUM_KEYS * sizeof(bool));
+	memset(m_downKeys, 0, NUM_KEYS * sizeof(bool));
+	memset(m_upKeys, 0, NUM_KEYS * sizeof(bool));
 
-static SDL_Event e;
-
-static int mouseX = 0;
-static int mouseY = 0;
-
-static bool inputs[NUM_KEYS];
-static bool downKeys[NUM_KEYS];
-static bool upKeys[NUM_KEYS];
-
-static bool mouseInput[NUM_MOUSEBUTTONS];
-static bool downMouse[NUM_MOUSEBUTTONS];
-static bool upMouse[NUM_MOUSEBUTTONS];
-
-void Input::update() {
-	for(int i = 0; i < NUM_MOUSEBUTTONS; i++) {
-		downMouse[i] = false;
-		upMouse[i] = false;
-	}
-
-	for(int i = 0; i < NUM_KEYS; i++) {
-		downKeys[i] = false;
-		upKeys[i] = false;
-	}
-
-	while(SDL_PollEvent(&e)) {
-		if(e.type == SDL_QUIT)
-			SDLSetIsCloseRequested(true);
-
-		if(e.type == SDL_MOUSEMOTION) {
-			mouseX = e.motion.x;
-			mouseY = e.motion.y;
-		}
-
-		if(e.type == SDL_KEYDOWN) {
-			int value = e.key.keysym.scancode;
-
-			inputs[value] = true;
-			downKeys[value] = true;
-		}
-
-		if(e.type == SDL_KEYUP) {
-			int value = e.key.keysym.scancode;
-
-			inputs[value] = false;
-			upKeys[value] = true;
-		}
-
-		if(e.type == SDL_MOUSEBUTTONDOWN) {
-			int value = e.button.button;
-
-			mouseInput[value] = true;
-			downMouse[value] = true;
-		}
-
-		if(e.type == SDL_MOUSEBUTTONUP) {
-			int value = e.button.button;
-
-			mouseInput[value] = false;
-			upMouse[value] = true;
-		}
-	}
+	memset(m_mouseInput, 0, NUM_MOUSEBUTTONS * sizeof(bool));
+	memset(m_downMouse, 0, NUM_MOUSEBUTTONS * sizeof(bool));
+	memset(m_upMouse, 0, NUM_MOUSEBUTTONS * sizeof(bool));
 }
 
-bool Input::getKey(int keyCode)
-{
-	return inputs[keyCode];
-}
-
-bool Input::getKeyDown(int keyCode)
-{
-	return downKeys[keyCode];
-}
-
-bool Input::getKeyUp(int keyCode)
-{
-	return upKeys[keyCode];
-}
-
-bool Input::getMouse(int button)
-{
-	return mouseInput[button];
-}
-
-bool Input::getMouseDown(int button)
-{
-	return downMouse[button];
-}
-
-bool Input::getMouseUp(int button)
-{
-	return upMouse[button];
-}
-
-Vector2f Input::getMousePosition()
-{
-	Vector2f res((float)mouseX,(float)mouseY);
-	return res;
-}
-
-void Input::setCursor(bool visible)
-{
-	if(visible)
+void Input::setCursor(bool visible) const {
+	if (visible)
 		SDL_ShowCursor(1);
 	else
 		SDL_ShowCursor(0);
 }
 
-void Input::setMousePosition(Vector2f pos)
-{
-	SDLSetMousePosition((int)pos.getX(), (int)pos.getY());
+void Input::setMousePosition(const Vector2f& pos) const {
+	SDL_WarpMouseInWindow(m_window->getSDLWindow(), (int) pos.getX(), (int) pos.getY());
 }

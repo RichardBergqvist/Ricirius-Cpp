@@ -2,7 +2,8 @@
 #define GAMEOBJECT_H
 
 #include <vector>
-#include "../core/transformer.h"
+#include "../util/transformer.h"
+#include "input.h"
 class CoreEngine;
 class GameComponent;
 class Shader;
@@ -10,30 +11,33 @@ class GraphicsEngine;
 
 class GameObject {
 public:
-	GameObject() { m_coreEngine = 0; }
+	GameObject(const Vector3f& pos = Vector3f(0, 0, 0), const Quaternion& rot = Quaternion(0, 0, 0, 1), float scale = 1) : m_transformer(pos, rot, scale), m_coreEngine(0) {}
 	virtual ~GameObject();
 	
 	GameObject* addChild(GameObject* child);
 	GameObject* addComponent(GameComponent* component);
 	
-	void inputAll(float delta);
+	void processInputAll(const Input& input, float delta);
 	void updateAll(float delta);
-	void renderAll(Shader* shader, GraphicsEngine* graphicsEngine);
+	void renderAll(const Shader& shader, const GraphicsEngine& graphicsEngine) const;
 	
 	std::vector<GameObject*> getAllAttached();
 	
-	inline Transformer& getTransformer() { return m_transformer; }
+	inline Transformer* getTransformer() { return &m_transformer; }
 	void setEngine(CoreEngine* engine);
 protected:
 private:
-	void input(float delta);
-	void update(float delta);
-	void render(Shader* shader, GraphicsEngine* graphicsEngine);
-
 	std::vector<GameObject*> m_children;
 	std::vector<GameComponent*> m_components;
 	Transformer m_transformer;
 	CoreEngine* m_coreEngine;
+
+	void processInput(const Input& input, float delta);
+	void update(float delta);
+	void render(const Shader& shader, const GraphicsEngine& graphicsEngine) const;
+
+	GameObject(const GameObject& other) {}
+	void operator=(const GameObject& other) {}
 };
 
 #endif // GAMEOBJECT_H
