@@ -3,7 +3,7 @@
 
 #include "../components/camera.h"
 #include "lighting.h"
-#include "../util/mappedValues.h"
+#include "mappedValues.h"
 #include "material.h"
 #include "model.h"
 #include "window.h"
@@ -49,6 +49,7 @@ private:
 	Shader m_shadowMapShader;
 	Shader m_nullFilter;
 	Shader m_gausBlurFilter;
+	Shader m_fxaaFilter;
 	Matrix4f m_lightMatrix;
 
 	Transformer m_altCameraTransformer;
@@ -58,7 +59,7 @@ private:
 	std::map<std::string, unsigned int> m_samplerMap;
 
 	void blurShadowMap(int shadowMapIndex, float blurAmount);
-	void applyFilter(const Shader& filter, const Texture& source, const Texture& dest);
+	void applyFilter(const Shader& filter, const Texture& source, const Texture* dest);
 
 	//GraphicsEngine(const GraphicsEngine& other) {}
 	//void operator=(const GraphicsEngine& other) {}

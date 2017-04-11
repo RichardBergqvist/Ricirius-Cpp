@@ -3,7 +3,7 @@
 
 #include "texture.h"
 #include "../util/math3d.h"
-#include "../util/mappedValues.h"
+#include "mappedValues.h"
 #include <map>
 
 class MaterialData : public ReferenceCounter, public MappedValues {

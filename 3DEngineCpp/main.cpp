@@ -36,7 +36,7 @@ void TestGame::init(const Window& window) {
 	addToScene((new GameObject(Vector3f(0, 0, 7), Quaternion(), 1.0f))->addComponent(new ModelRenderer(Model("square"), Material("bricks2"))));
 }
 
-int main(int argc, char* argv[]) {
+int main() {
 	TestGame game;
 	CoreEngine engine(800, 600, 60, &game);
 	engine.createWindow("Ricirius");

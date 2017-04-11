@@ -2,9 +2,9 @@
 #define MAPPEDVALUES_H_INCLUDED
 
 #include <map>
-#include <string>
-#include "../graphics/texture.h"
-#include "math3d.h"
+
+#include "texture.h"
+#include "../util/math3d.h"
 
 class MappedValues {
 public:
@@ -13,7 +13,7 @@ public:
 	inline void setVector3f(const std::string& name, const Vector3f& value) { m_vector3fMap[name] = value; }
 	inline void setFloat(const std::string& name, float value) { m_floatMap[name] = value; }
 	inline void setTexture(const std::string& name, const Texture& value) { m_textureMap[name] = value; }
-	
+
 	const Vector3f& getVector3f(const std::string& name) const;
 	float getFloat(const std::string& name) const;
 	const Texture& getTexture(const std::string& name) const;
