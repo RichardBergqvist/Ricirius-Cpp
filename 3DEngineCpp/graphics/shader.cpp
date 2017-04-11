@@ -5,18 +5,24 @@
 #include <GL/glew.h>
 #include <cstdlib>
 #include <cstring>
+#include <sstream>
 
 #include "lighting.h"
 #include "../util/util.h"
 #include "graphicsEngine.h"
 
 std::map<std::string, ShaderData*> Shader::s_resourceMap;
+int ShaderData::s_supportedGLSLLevel = 0;
 
 static void checkShaderError(int shader, int flag, bool isProgram, const std::string& errorMessage);
 static std::vector<UniformStruct> findUniformStructs(const std::string& shaderText);
 static std::string findUniformStructName(const std::string& structStartToOpeningBrace);
 static std::vector<TypedData> findUniformStructComponents(const std::string& openingBraceToClosingBrace);
 static std::string loadShader(const std::string& fileName);
+
+static void string_ReplaceKey(std::string* replaceIn, size_t replacementStart, const std::string& replacementValue, const std::string& endKey, int startLocation);
+static void string_FindAndReplace(std::string* replaceIn, const std::string& replacementKey, const std::string& replacementValue, const std::string& endKey = "", int startLocation = 0);
+static void string_ReplaceAll(std::string* replaceIn, const std::string& replacementKey, const std::string& replacementValue, const std::string& endKey = "", int startLocation = 0, bool insertCounter = false);
 
 ShaderData::ShaderData(const std::string& fileName) {
 	m_program = glCreateProgram();
@@ -25,14 +31,31 @@ ShaderData::ShaderData(const std::string& fileName) {
         fprintf(stderr, "Error creating shader program\n");
         exit(1);
     }
+
+	if (s_supportedGLSLLevel == 0) {
+		int majorVersion;
+		int minorVersion;
+
+		glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
+		glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
+
+		s_supportedGLSLLevel = majorVersion * 100 + minorVersion * 10;
+	}
     
     std::string vertexShaderText = loadShader(fileName + ".vs");
     std::string fragmentShaderText = loadShader(fileName + ".fs");
     
+	if (s_supportedGLSLLevel >= 330) {
+		convertVertexShaderToGLSL330(&vertexShaderText);
+		convertFragmentShaderToGLSL330(&fragmentShaderText);
+	}
+
     addVertexShader(vertexShaderText);
     addFragmentShader(fragmentShaderText);
     
-    addAllAttributes(vertexShaderText);
+	if (s_supportedGLSLLevel < 330) {
+		addAllAttributes(vertexShaderText);
+	}
     
     compileShader();
     
@@ -79,9 +102,9 @@ void Shader::bind() const {
 	glUseProgram(m_shaderData->getProgram());
 }
 
-void Shader::updateUniforms(const Transformer& transformer, const Material& material, const GraphicsEngine& graphicsEngine) const {
+void Shader::updateUniforms(const Transformer& transformer, const Material& material, const GraphicsEngine& graphicsEngine, const Camera& camera) const {
 	Matrix4f worldMatrix = transformer.getTransformation();
-	Matrix4f projectedMatrix = graphicsEngine.getMainCamera().getViewProjection() * worldMatrix;
+	Matrix4f projectedMatrix = camera.getViewProjection() * worldMatrix;
 
 	for (unsigned int i = 0; i < m_shaderData->getUniformNames().size(); i++) {
 		std::string uniformName = m_shaderData->getUniformNames()[i];
@@ -121,7 +144,7 @@ void Shader::updateUniforms(const Transformer& transformer, const Material& mate
 				throw "Invalid Transform Uniform: " + uniformName;
 		} else if (uniformName.substr(0, 2) == "C_") {
 			if (uniformName == "C_eyePos")
-				setUniformVector3f(uniformName, graphicsEngine.getMainCamera().getTransformer().getTransformedPos());
+				setUniformVector3f(uniformName, camera.getTransformer().getTransformedPos());
 			else
 				throw "Invalid Camera Uniform: " + uniformName;
 		} else {
@@ -177,6 +200,34 @@ void Shader::setUniformSpotLight(const std::string& uniformName, const SpotLight
 	setUniformf(uniformName + ".pointLight.range", spotLight.getRange());
 	setUniformVector3f(uniformName + ".direction", spotLight.getTransformer().getTransformedRot().getForward());
 	setUniformf(uniformName + ".cutoff", spotLight.getCutoff());
+}
+
+static void replaceShaderVersionWith(std::string* shaderText, const std::string& newVersion) {
+	static const std::string VERSION_KEY = "#version ";
+	
+	size_t versionLocation = shaderText->find(VERSION_KEY);
+	size_t versionNumberStart = versionLocation + VERSION_KEY.length();
+	size_t versionNumberEnd = shaderText->find("\n", versionNumberStart) - versionNumberStart;
+	shaderText->replace(versionNumberStart, versionNumberEnd, newVersion);
+}
+
+void ShaderData::convertVertexShaderToGLSL330(std::string* shaderText) {
+	replaceShaderVersionWith(shaderText, "330");
+	
+	string_ReplaceAll(shaderText, "varying", "out");
+	string_ReplaceAll(shaderText, "attribute", "layout(location = %d) in", "", 0, true);
+}
+
+void ShaderData::convertFragmentShaderToGLSL330(std::string* shaderText) {
+	replaceShaderVersionWith(shaderText, "330");
+	
+	string_ReplaceAll(shaderText, "varying", "in");
+	string_ReplaceAll(shaderText, "texture2D", "texture");
+	string_FindAndReplace(shaderText, "gl_FragColor", "OUT_Fragment_Color");
+	
+	std::string newFragout = "out vec4 OUT_Fragment_Color;\n";
+	size_t start = shaderText->find("\n");
+	shaderText->replace(start + 1, 0, newFragout);
 }
 
 void ShaderData::addVertexShader(const std::string& text) {
@@ -426,4 +477,46 @@ static std::vector<UniformStruct> findUniformStructs(const std::string& shaderTe
 	}
 
 	return result;
+}
+
+static void string_ReplaceKey(std::string* replaceIn, size_t replacementStart, const std::string& replacementValue, const std::string& endKey, int startLocation) {
+	size_t replacementEnd = replaceIn->find(endKey, startLocation) - replacementStart;
+	
+	replaceIn->replace(replacementStart, replacementEnd, replacementValue);
+}
+
+static void string_FindAndReplace(std::string* replaceIn, const std::string& replacementKey, const std::string& replacementValue, const std::string& endKey, int startLocation) {
+	size_t replacementStart = replaceIn->find(replacementKey, startLocation);
+	string_ReplaceKey(replaceIn, replaceIn->find(replacementKey, startLocation), replacementValue, endKey, replacementStart + replacementKey.length());
+}
+
+static void string_ReplaceAll(std::string* replaceIn, const std::string& replacementKey, const std::string& replacementValue, const std::string& endKey, int startLocation, bool insertCounter) {
+	static std::string COUNTER_KEY = "%d";
+	
+	int numReplaced = 0;
+	size_t replacementLocation = replaceIn->find(replacementKey, startLocation);
+	
+	size_t counterLocation = 0;
+	std::string newReplacementStart = "";
+	std::string newReplacementEnd = "";
+	
+	if (insertCounter) {
+		counterLocation = replacementValue.find(COUNTER_KEY);
+		newReplacementStart = replacementValue.substr(0, counterLocation);
+		newReplacementEnd = replacementValue.substr(counterLocation + COUNTER_KEY.length());
+	}
+	
+	while (replacementLocation != std::string::npos) {
+		if (insertCounter) {
+		std::stringstream newReplacement;
+			
+		newReplacement << newReplacementStart << numReplaced << newReplacementEnd;
+			
+		replaceIn->replace(replacementLocation, replacementKey.length(), newReplacement.str());
+		} else
+		  string_ReplaceKey(replaceIn, replacementLocation, replacementValue, endKey, replacementLocation + replacementKey.length());
+
+		replacementLocation = replaceIn->find(replacementKey, replacementLocation + replacementValue.length());
+		numReplaced++;
+	}
 }

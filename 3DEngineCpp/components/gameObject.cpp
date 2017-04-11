@@ -39,11 +39,11 @@ void GameObject::updateAll(float delta) {
 		m_children[i]->updateAll(delta);
 }
 
-void GameObject::renderAll(const Shader& shader, const GraphicsEngine& graphicsEngine) const {
-	render(shader, graphicsEngine);
+void GameObject::renderAll(const Shader& shader, const GraphicsEngine& graphicsEngine, const Camera& camera) const {
+	render(shader, graphicsEngine, camera);
 
 	for(unsigned int i = 0; i < m_children.size(); i++)
-		m_children[i]->renderAll(shader, graphicsEngine);
+		m_children[i]->renderAll(shader, graphicsEngine, camera);
 }
 
 void GameObject::processInput(const Input& input, float delta) {
@@ -58,9 +58,9 @@ void GameObject::update(float delta) {
 		m_components[i]->update(delta);
 }
 
-void GameObject::render(const Shader& shader, const GraphicsEngine& graphicsEngine) const {
+void GameObject::render(const Shader& shader, const GraphicsEngine& graphicsEngine, const Camera& camera) const {
 	for(unsigned int i = 0; i < m_components.size(); i++)
-		m_components[i]->render(shader, graphicsEngine);
+		m_components[i]->render(shader, graphicsEngine, camera);
 }
 
 void GameObject::setEngine(CoreEngine* engine) {

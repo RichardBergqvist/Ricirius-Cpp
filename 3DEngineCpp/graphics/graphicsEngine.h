@@ -14,18 +14,18 @@ class GameObject;
 class GraphicsEngine : public MappedValues {
 public:
 	GraphicsEngine(const Window& window);
-	virtual ~GraphicsEngine() {}
+	//virtual ~GraphicsEngine() {}
 
-	void render(const GameObject& object);
+	void render(const GameObject& object, const Camera& mainCamera);
 
 	inline void addLight(const BaseLight& light) { m_lights.push_back(&light); }
-	inline void addCamera(const Camera& camera) { m_mainCamera = &camera; }
+	//inline void addCamera(const Camera& camera) { m_mainCamera = &camera; }
 
 	virtual void updateUniformStruct(const Transformer& transform, const Material& material, const Shader& shader, const std::string& uniformName, const std::string& uniformType) const {
 		throw uniformType + " is not supported by the rendering engine";
 	}
 
-	inline const Camera& getMainCamera() const { return *m_mainCamera; }
+	//inline const Camera& getMainCamera() const { return *m_mainCamera; }
 	inline const BaseLight& getActiveLight() const { return *m_activeLight; }
 	inline unsigned int getSamplerSlot(const std::string& samplerName) const { return m_samplerMap.find(samplerName)->second; }
 	inline const Matrix4f& getLightMatrix() const { return m_lightMatrix; }
@@ -51,9 +51,8 @@ private:
 	Shader m_gausBlurFilter;
 	Matrix4f m_lightMatrix;
 
-	GameObject m_altCameraObject;
-	Camera* m_altCamera;
-	const Camera* m_mainCamera;
+	Transformer m_altCameraTransformer;
+	Camera m_altCamera;
 	const BaseLight* m_activeLight;
 	std::vector<const BaseLight*> m_lights;
 	std::map<std::string, unsigned int> m_samplerMap;
@@ -61,8 +60,8 @@ private:
 	void blurShadowMap(int shadowMapIndex, float blurAmount);
 	void applyFilter(const Shader& filter, const Texture& source, const Texture& dest);
 
-	GraphicsEngine(const GraphicsEngine& other) {}
-	void operator=(const GraphicsEngine& other) {}
+	//GraphicsEngine(const GraphicsEngine& other) {}
+	//void operator=(const GraphicsEngine& other) {}
 };
 
 #endif // GRAPHICSENGINE_H

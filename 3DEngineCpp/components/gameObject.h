@@ -4,6 +4,7 @@
 #include <vector>
 #include "../util/transformer.h"
 #include "input.h"
+class Camera;
 class CoreEngine;
 class GameComponent;
 class Shader;
@@ -19,7 +20,7 @@ public:
 	
 	void processInputAll(const Input& input, float delta);
 	void updateAll(float delta);
-	void renderAll(const Shader& shader, const GraphicsEngine& graphicsEngine) const;
+	void renderAll(const Shader& shader, const GraphicsEngine& graphicsEngine, const Camera& camera) const;
 	
 	std::vector<GameObject*> getAllAttached();
 	
@@ -34,7 +35,7 @@ private:
 
 	void processInput(const Input& input, float delta);
 	void update(float delta);
-	void render(const Shader& shader, const GraphicsEngine& graphicsEngine) const;
+	void render(const Shader& shader, const GraphicsEngine& graphicsEngine, const Camera& camera) const;
 
 	GameObject(const GameObject& other) {}
 	void operator=(const GameObject& other) {}

@@ -3,6 +3,7 @@
 
 #include "../components/gameObject.h"
 #include "coreEngine.h"
+#include "../components/camera.h"
 
 class Game {
 public:
@@ -12,7 +13,7 @@ public:
 	virtual void init(const Window& window) {}
 	void processInput(const Input& input, float delta);
 	void update(float delta);
-	void render(GraphicsEngine* graphicsEngine);
+	void render(GraphicsEngine* graphicsEngine, const Camera& camera);
 	
 	inline GameObject& getRoot() { return m_root; }
 	

@@ -77,7 +77,7 @@ void CoreEngine::run() {
 
 		if (render)
 		{
-			m_game->render(m_graphicsEngine);
+			m_game->render(m_graphicsEngine, *m_mainCamera);
 			m_window->swapBuffers();
 			frames++;
 		}

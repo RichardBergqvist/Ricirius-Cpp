@@ -9,6 +9,7 @@
 #include "../util/math3d.h"
 #include "material.h"
 #include "../util/transformer.h"
+#include "../components/camera.h"
 
 class GraphicsEngine;
 class DirectionalLight;
@@ -57,7 +58,10 @@ private:
 	void addShaderUniforms(const std::string& shaderText);
 	void addUniform(const std::string& uniformName, const std::string& uniformType, const std::vector<UniformStruct>& structs);
 	void compileShader() const;
+	void convertVertexShaderToGLSL330(std::string* shaderText);
+	void convertFragmentShaderToGLSL330(std::string* shaderText);
 
+	static int s_supportedGLSLLevel;
 	int m_program;
 	std::vector<int>                    m_shaders;
 	std::vector<std::string>            m_uniformNames;
@@ -72,7 +76,7 @@ public:
 	virtual ~Shader();
 
 	void bind() const;
-	virtual void updateUniforms(const Transformer& transform, const Material& material, const GraphicsEngine& graphicsEngine) const;
+	virtual void updateUniforms(const Transformer& transform, const Material& material, const GraphicsEngine& graphicsEngine, const Camera& camera) const;
 
 	void setUniformi(const std::string& uniformName, int value) const;
 	void setUniformf(const std::string& uniformName, float value) const;

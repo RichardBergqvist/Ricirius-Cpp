@@ -9,18 +9,18 @@ class Shader;
 
 class GameComponent {
 public:
-	GameComponent() {}
+	GameComponent() : m_parent(0) {}
 	virtual ~GameComponent() {}
 
 	virtual void processInput(const Input& input, float delta) {}
 	virtual void update(float delta) {}
-	virtual void render(const Shader& shader, const GraphicsEngine& graphicsEngine) const {}
+	virtual void render(const Shader& shader, const GraphicsEngine& graphicsEngine, const Camera& camera) const {}
 	
 	virtual void addToEngine(CoreEngine* engine) const {}
 	
 	inline Transformer* getTransformer() { return m_parent->getTransformer(); }
 	inline const Transformer& getTransformer() const { return *m_parent->getTransformer(); }
-	inline void setParent(GameObject* parent) { m_parent = parent; }
+	virtual void setParent(GameObject* parent) { m_parent = parent; }
 	
 private:
 	GameObject* m_parent;

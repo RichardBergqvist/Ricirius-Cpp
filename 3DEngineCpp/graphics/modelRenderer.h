@@ -8,9 +8,9 @@ class ModelRenderer : public GameComponent {
 public:
 	ModelRenderer(const Model& model, const Material& material) : m_model(model), m_material(material) {}
 
-	virtual void render(const Shader& shader, const GraphicsEngine& graphicsEngine) const {
+	virtual void render(const Shader& shader, const GraphicsEngine& graphicsEngine, const Camera& camera) const {
 		shader.bind();
-		shader.updateUniforms(getTransformer(), m_material, graphicsEngine);
+		shader.updateUniforms(getTransformer(), m_material, graphicsEngine, camera);
 		m_model.render();
 	}
 protected:
