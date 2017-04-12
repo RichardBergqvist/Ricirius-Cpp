@@ -1,7 +1,7 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
-#include "math3d.h"
+#include "../util/math3d.h"
 
 class Transformer {
 public:

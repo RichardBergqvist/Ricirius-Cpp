@@ -1,7 +1,7 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include "../components/referenceCounter.h"
+#include "../util/referenceCounter.h"
 #include <GL/glew.h>
 #include <string>
 #include <map>

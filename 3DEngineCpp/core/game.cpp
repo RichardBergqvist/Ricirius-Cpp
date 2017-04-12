@@ -10,6 +10,6 @@ void Game::update(float delta) {
 	m_root.updateAll(delta);
 }
 
-void Game::render(GraphicsEngine* graphicsEngine, const Camera& camera) {
-	graphicsEngine->render(m_root, camera);
+void Game::render(GraphicsEngine* graphicsEngine) {
+	graphicsEngine->render(m_root);
 }

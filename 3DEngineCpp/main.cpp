@@ -38,8 +38,10 @@ void TestGame::init(const Window& window) {
 
 int main() {
 	TestGame game;
-	CoreEngine engine(800, 600, 60, &game);
-	engine.createWindow("Ricirius");
+	Window window(800, 600, "Ricirius");
+	GraphicsEngine renderer(window);
+
+	CoreEngine engine(60, &window, &renderer, &game);
 	engine.start();
 	
 	return 0;

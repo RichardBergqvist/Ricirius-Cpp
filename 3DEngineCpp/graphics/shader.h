@@ -5,10 +5,10 @@
 #include <vector>
 #include <string>
 
-#include "../components/referenceCounter.h"
+#include "../util/referenceCounter.h"
 #include "../util/math3d.h"
 #include "material.h"
-#include "../util/transformer.h"
+#include "../components/transformer.h"
 #include "../components/camera.h"
 
 class GraphicsEngine;

@@ -20,9 +20,9 @@ GraphicsEngine::GraphicsEngine(const Window& window) : m_plane(Model("plane.obj"
 
 	setFloat("fxaaSpanMax", 8.0F);
 	setFloat("fxaaReduceMin", 1.0 / 128.0F);
-	setFloat("fxaaReduceMul", 1.0 / 8.0F);
+	setFloat("fxaaReduceMul", 1.0 / 4.0F);
 
-	setTexture("displayTexture", Texture(m_window->getWidth(), m_window->getHeight(), 0, GL_TEXTURE_2D, GL_LINEAR, GL_RGBA, GL_RGBA, false, GL_COLOR_ATTACHMENT0));
+	setTexture("displayTexture", Texture(m_window->getWidth(), m_window->getHeight(), 0, GL_TEXTURE_2D, GL_NEAREST, GL_RGBA, GL_RGBA, false, GL_COLOR_ATTACHMENT0));
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -80,14 +80,14 @@ void GraphicsEngine::applyFilter(const Shader& filter, const Texture& source, co
 	setTexture("filterTexture", 0);
 }
 
-void GraphicsEngine::render(const GameObject& object, const Camera& mainCamera) {
+void GraphicsEngine::render(const GameObject& object) {
 	
 	getTexture("displayTexture").bindAsRenderTarget();
 	//m_window->bindAsRenderTarget();
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	object.renderAll(m_defaultShader, *this, mainCamera);
+	object.renderAll(m_defaultShader, *this, *m_mainCamera);
 
 	for (unsigned int i = 0; i < m_lights.size(); i++) {
 		m_activeLight = m_lights[i];
@@ -106,7 +106,7 @@ void GraphicsEngine::render(const GameObject& object, const Camera& mainCamera) 
 
 		if (shadowData.getShadowMapSizeAsPowerOf2() != 0) {
 			m_altCamera.setProjection(shadowData.getProjection());
-			ShadowCameraTransformer shadowCameraTransformer = m_activeLight->calcShadowCameraTransformer(mainCamera.getTransformer().getTransformedPos(), mainCamera.getTransformer().getTransformedRot());
+			ShadowCameraTransformer shadowCameraTransformer = m_activeLight->calcShadowCameraTransformer(m_mainCamera->getTransformer().getTransformedPos(), m_mainCamera->getTransformer().getTransformedRot());
 			m_altCamera.getTransformer()->setPos(shadowCameraTransformer.getPos());
 			m_altCamera.getTransformer()->setRot(shadowCameraTransformer.getRot());
 
@@ -147,7 +147,7 @@ void GraphicsEngine::render(const GameObject& object, const Camera& mainCamera) 
 		glDepthMask(GL_FALSE);
 		glDepthFunc(GL_EQUAL);
 
-		object.renderAll(m_activeLight->getShader(), *this, mainCamera);
+		object.renderAll(m_activeLight->getShader(), *this, *m_mainCamera);
 
 		glDepthMask(GL_TRUE);
 		glDepthFunc(GL_LESS);

@@ -1,7 +1,7 @@
 #ifndef GAMECOMPONENT_H_INCLUDED
 #define GAMECOMPONENT_H_INCLUDED
 
-#include "../util/transformer.h"
+#include "transformer.h"
 #include "gameObject.h"
 #include "input.h"
 class GraphicsEngine;

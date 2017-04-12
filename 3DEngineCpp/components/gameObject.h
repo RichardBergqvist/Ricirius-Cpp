@@ -2,7 +2,7 @@
 #define GAMEOBJECT_H
 
 #include <vector>
-#include "../util/transformer.h"
+#include "transformer.h"
 #include "input.h"
 class Camera;
 class CoreEngine;

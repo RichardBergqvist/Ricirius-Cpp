@@ -2,7 +2,7 @@
 #define MODEL_H
 
 #include "../util/math3d.h"
-#include "../components/referenceCounter.h"
+#include "../util/referenceCounter.h"
 #include <string>
 #include <vector>
 #include <map>

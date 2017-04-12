@@ -3,7 +3,7 @@
 
 #include "../graphics/model.h"
 #include "../graphics/shader.h"
-#include "../util/transformer.h"
+#include "../components/transformer.h"
 #include "../components/camera.h"
 #include "../graphics/lighting.h"
 #include "../components/gameObject.h"
