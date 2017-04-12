@@ -1,5 +1,16 @@
 #include "sampling.glh"
 
+uniform sampler2D diffuse;
+uniform sampler2D normalMap;
+uniform sampler2D dispMap;
+
+uniform float dispMapScale;
+uniform float dispMapBias;
+
+uniform sampler2D R_shadowMap;
+uniform float R_shadowVarianceMin;
+uniform float R_shadowLightBleedingReduction;
+
 bool inRange(float val) {
 	return val >= 0.0 && val <= 1.0;
 }

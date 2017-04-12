@@ -8,7 +8,7 @@
 
 const Matrix4f GraphicsEngine::BIAS_MATRIX = Matrix4f().initScale(Vector3f(0.5, 0.5, 0.5)) * Matrix4f().initTranslation(Vector3f(1.0, 1.0, 1.0));
 
-GraphicsEngine::GraphicsEngine(const Window& window) : m_plane(Model("plane.obj")), m_window(&window), m_tempTarget(window.getWidth(), window.getHeight(), 0, GL_TEXTURE_2D, GL_NEAREST, GL_RGBA, GL_RGBA, false, GL_COLOR_ATTACHMENT0), m_planeMaterial("graphicsEngine_filterPlane", m_tempTarget, 1, 8), m_defaultShader("forward-ambient", true), m_shadowMapShader("shadowMapGenerator", true), m_nullFilter("filter-null", true), m_gausBlurFilter("filter-gausBlur7x1", true), m_fxaaFilter("filter-fxaa", true), m_altCameraTransformer(Vector3f(0, 0, 0), Quaternion(Vector3f(0, 1, 0), toRadians(180.0F))), m_altCamera(Matrix4f().initIdentity(), &m_altCameraTransformer) {
+GraphicsEngine::GraphicsEngine(const Window& window) : m_plane(Model("plane.obj")), m_window(&window), m_tempTarget(window.getWidth(), window.getHeight(), 0, GL_TEXTURE_2D, GL_NEAREST, GL_RGBA, GL_RGBA, false, GL_COLOR_ATTACHMENT0), m_planeMaterial("graphicsEngine_filterPlane", m_tempTarget, 1, 8), m_defaultShader("forward-ambient"), m_shadowMapShader("shadowMapGenerator"), m_nullFilter("filter-null"), m_gausBlurFilter("filter-gausBlur7x1"), m_fxaaFilter("filter-fxaa"), m_altCameraTransformer(Vector3f(0, 0, 0), Quaternion(Vector3f(0, 1, 0), toRadians(180.0F))), m_altCamera(Matrix4f().initIdentity(), &m_altCameraTransformer) {
 	setSamplerSlot("diffuse", 0);
 	setSamplerSlot("normalMap", 1);
 	setSamplerSlot("dispMap", 2);

@@ -3,22 +3,15 @@
 varying vec2 texCoord0;
 
 #if defined(VS_BUILD)
-attribute vec3 position;
-attribute vec2 texCoord;
-
-uniform mat4 T_MVP;
-
-void main() {
-	texCoord0 = texCoord;
-	gl_Position = T_MVP * vec4(position, 1.0);
-}
-
+#include "filter.vsh"
 #elif defined(FS_BUILD)
+
 uniform sampler2D R_filterTexture;
 uniform vec3 R_inverseFilterTextureSize;
 uniform float R_fxaaSpanMax;
 uniform float R_fxaaReduceMin;
 uniform float R_fxaaReduceMul;
+
 
 declareFragOutput(0, vec4);
 void main() {
