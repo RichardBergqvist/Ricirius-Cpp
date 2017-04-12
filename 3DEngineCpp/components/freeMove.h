@@ -2,9 +2,9 @@
 #define FREEMOVE_H
 
 #include "../util/math3d.h"
-#include "../components/gameComponent.h"
+#include "../components/entityComponent.h"
 
-class FreeMove : public GameComponent {
+class FreeMove : public EntityComponent {
 public:
 	FreeMove(float speed = 10.0f, int forwardKey = Input::KEY_W, int backKey = Input::KEY_S, int leftKey = Input::KEY_A, int rightKey = Input::KEY_D) : m_speed(speed), m_forwardKey(forwardKey), m_backKey(backKey), m_leftKey(leftKey), m_rightKey(rightKey) {}
 	

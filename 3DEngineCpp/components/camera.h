@@ -2,7 +2,7 @@
 #define CAMERA_H
 
 #include "../util/math3d.h"
-#include "gameComponent.h"
+#include "entityComponent.h"
 
 class Camera {
 public:
@@ -20,7 +20,7 @@ private:
 	Transformer* m_transformer;
 };
 
-class CameraComponent : public GameComponent
+class CameraComponent : public EntityComponent
 {
 public:
 	CameraComponent(const Matrix4f& projection) : m_camera(projection, 0) {}
@@ -30,7 +30,7 @@ public:
 	inline Matrix4f getViewProjection() const { return m_camera.getViewProjection(); }
 
 	inline void setProjection(const Matrix4f& projection) { m_camera.setProjection(projection); }
-	virtual void setParent(GameObject* parent);
+	virtual void setParent(Entity* parent);
 protected:
 private:
 	Camera m_camera;

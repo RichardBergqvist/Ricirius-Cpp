@@ -1,16 +1,16 @@
-#ifndef GAMECOMPONENT_H_INCLUDED
-#define GAMECOMPONENT_H_INCLUDED
+#ifndef ENTITYCOMPONENT_H_INCLUDED
+#define ENTITYCOMPONENT_H_INCLUDED
 
 #include "transformer.h"
-#include "gameObject.h"
+#include "entity.h"
 #include "input.h"
 class GraphicsEngine;
 class Shader;
 
-class GameComponent {
+class EntityComponent {
 public:
-	GameComponent() : m_parent(0) {}
-	virtual ~GameComponent() {}
+	EntityComponent() : m_parent(0) {}
+	virtual ~EntityComponent() {}
 
 	virtual void processInput(const Input& input, float delta) {}
 	virtual void update(float delta) {}
@@ -20,13 +20,13 @@ public:
 	
 	inline Transformer* getTransformer() { return m_parent->getTransformer(); }
 	inline const Transformer& getTransformer() const { return *m_parent->getTransformer(); }
-	virtual void setParent(GameObject* parent) { m_parent = parent; }
+	virtual void setParent(Entity* parent) { m_parent = parent; }
 	
 private:
-	GameObject* m_parent;
+	Entity* m_parent;
 
-	GameComponent(const GameComponent& other) {}
-	void operator=(const GameComponent& other) {}
+	EntityComponent(const EntityComponent& other) {}
+	void operator=(const EntityComponent& other) {}
 };
 
-#endif // GAMECOMPONENT_H_INCLUDED
+#endif // ENTITYCOMPONENT_H_INCLUDED

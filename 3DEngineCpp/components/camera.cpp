@@ -17,8 +17,8 @@ void CameraComponent::addToEngine(CoreEngine* engine) const
 	engine->getGraphicsEngine()->setMainCamera(m_camera);
 }
 
-void CameraComponent::setParent(GameObject* parent)
+void CameraComponent::setParent(Entity* parent)
 {
-	GameComponent::setParent(parent);
+	EntityComponent::setParent(parent);
 	m_camera.setTransformer(getTransformer());
 }

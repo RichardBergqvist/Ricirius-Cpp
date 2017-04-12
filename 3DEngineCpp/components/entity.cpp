@@ -1,8 +1,8 @@
-#include "gameObject.h"
-#include "gameComponent.h"
+#include "entity.h"
+#include "entityComponent.h"
 #include "../core/coreEngine.h"
 
-GameObject::~GameObject() {
+Entity::~Entity() {
 	for(unsigned int i = 0; i < m_components.size(); i++)
 		if(m_components[i])
 			delete m_components[i];
@@ -12,58 +12,58 @@ GameObject::~GameObject() {
 			delete m_children[i];
 }
 
-GameObject* GameObject::addChild(GameObject* child) {
+Entity* Entity::addChild(Entity* child) {
 	m_children.push_back(child); 
 	child->getTransformer()->setParent(&m_transformer);
 	child->setEngine(m_coreEngine);
 	return this;
 }
 
-GameObject* GameObject::addComponent(GameComponent* component) {
+Entity* Entity::addComponent(EntityComponent* component) {
 	m_components.push_back(component);
 	component->setParent(this);
 	return this;
 }
 
-void GameObject::processInputAll(const Input& input, float delta) {
+void Entity::processInputAll(const Input& input, float delta) {
 	processInput(input, delta);
 
 	for(unsigned int i = 0; i < m_children.size(); i++)
 		m_children[i]->processInputAll(input, delta);
 }
 
-void GameObject::updateAll(float delta) {
+void Entity::updateAll(float delta) {
 	update(delta);
 
 	for(unsigned int i = 0; i < m_children.size(); i++)
 		m_children[i]->updateAll(delta);
 }
 
-void GameObject::renderAll(const Shader& shader, const GraphicsEngine& graphicsEngine, const Camera& camera) const {
+void Entity::renderAll(const Shader& shader, const GraphicsEngine& graphicsEngine, const Camera& camera) const {
 	render(shader, graphicsEngine, camera);
 
 	for(unsigned int i = 0; i < m_children.size(); i++)
 		m_children[i]->renderAll(shader, graphicsEngine, camera);
 }
 
-void GameObject::processInput(const Input& input, float delta) {
+void Entity::processInput(const Input& input, float delta) {
 	m_transformer.update();
 
 	for(unsigned int i = 0; i < m_components.size(); i++)
 		m_components[i]->processInput(input, delta);
 }
 
-void GameObject::update(float delta) {
+void Entity::update(float delta) {
 	for(unsigned int i = 0; i < m_components.size(); i++)
 		m_components[i]->update(delta);
 }
 
-void GameObject::render(const Shader& shader, const GraphicsEngine& graphicsEngine, const Camera& camera) const {
+void Entity::render(const Shader& shader, const GraphicsEngine& graphicsEngine, const Camera& camera) const {
 	for(unsigned int i = 0; i < m_components.size(); i++)
 		m_components[i]->render(shader, graphicsEngine, camera);
 }
 
-void GameObject::setEngine(CoreEngine* engine) {
+void Entity::setEngine(CoreEngine* engine) {
 	if(m_coreEngine != engine)
 	{
 		m_coreEngine = engine;
@@ -76,11 +76,11 @@ void GameObject::setEngine(CoreEngine* engine) {
 	}
 }
 
-std::vector<GameObject*> GameObject::getAllAttached() {
-	std::vector<GameObject*> result;
+std::vector<Entity*> Entity::getAllAttached() {
+	std::vector<Entity*> result;
 	
 	for(unsigned int i = 0; i < m_children.size(); i++) {
-		std::vector<GameObject*> childObjects = m_children[i]->getAllAttached();
+		std::vector<Entity*> childObjects = m_children[i]->getAllAttached();
 		result.insert(result.end(), childObjects.begin(), childObjects.end());
 	}
 	

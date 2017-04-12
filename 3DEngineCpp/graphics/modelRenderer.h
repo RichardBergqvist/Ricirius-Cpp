@@ -1,10 +1,10 @@
 #ifndef MODELRENDERER_H_INCLUDED
 #define MODELRENDERER_H_INCLUDED
 
-#include "../components/gameComponent.h"
+#include "../components/entityComponent.h"
 #include "model.h"
 
-class ModelRenderer : public GameComponent {
+class ModelRenderer : public EntityComponent {
 public:
 	ModelRenderer(const Model& model, const Material& material) : m_model(model), m_material(material) {}
 

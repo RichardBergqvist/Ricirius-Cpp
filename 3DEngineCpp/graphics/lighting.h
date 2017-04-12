@@ -2,7 +2,7 @@
 #define LIGHTING_H
 
 #include "../util/math3d.h"
-#include "../components/gameComponent.h"
+#include "../components/entityComponent.h"
 #include "shader.h"
 
 class CoreEngine;
@@ -38,7 +38,7 @@ private:
 	float m_minVariance;
 };
 
-class BaseLight : public GameComponent {
+class BaseLight : public EntityComponent {
 public:
 	BaseLight(const Vector3f& color, float intensity, const Shader& shader) : m_color(color), m_intensity(intensity), m_shader(shader), m_shadowData(ShadowData()) {}
 

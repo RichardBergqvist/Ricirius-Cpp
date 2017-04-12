@@ -10,14 +10,14 @@
 #include "../util/profiling.h"
 #include <vector>
 #include <map>
-class GameObject;
+class Entity;
 
 class GraphicsEngine : public MappedValues {
 public:
 	GraphicsEngine(const Window& window);
 	virtual ~GraphicsEngine() {}
 
-	void render(const GameObject& object);
+	void render(const Entity& object);
 
 	inline void addLight(const BaseLight& light) { m_lights.push_back(&light); }
 	inline void setMainCamera(const Camera& camera) { m_mainCamera = &camera; }

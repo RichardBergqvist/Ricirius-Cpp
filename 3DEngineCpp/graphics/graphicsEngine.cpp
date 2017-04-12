@@ -1,6 +1,6 @@
 #include "graphicsEngine.h"
 #include "window.h"
-#include "../components/gameObject.h"
+#include "../components/entity.h"
 #include "shader.h"
 #include <GL/glew.h>
 #include "model.h"
@@ -18,9 +18,10 @@ GraphicsEngine::GraphicsEngine(const Window& window) : m_plane(Model("plane.obj"
 
 	setVector3f("ambient", Vector3f(0.2f, 0.2f, 0.2f));
 
-	setFloat("fxaaSpanMax", 8.0F);
-	setFloat("fxaaReduceMin", 1.0 / 128.0F);
-	setFloat("fxaaReduceMul", 1.0 / 8.0F);
+	setFloat("fxaaSpanMax", 8);
+	setFloat("fxaaReduceMin", 1 / 128);
+	setFloat("fxaaReduceMul", 1 / 8);
+	setFloat("fxaaAspectDistortion", 150);
 
 	setTexture("displayTexture", Texture(m_window->getWidth(), m_window->getHeight(), 0, GL_TEXTURE_2D, GL_LINEAR, GL_RGBA, GL_RGBA, true, GL_COLOR_ATTACHMENT0));
 
@@ -30,8 +31,6 @@ GraphicsEngine::GraphicsEngine(const Window& window) : m_plane(Model("plane.obj"
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_DEPTH_CLAMP);
-	//glEnable(GL_MULTISAMPLE);
 
 	m_planeTransformer.setScale(1.0f);
 	m_planeTransformer.rotate(Quaternion(Vector3f(1, 0, 0), toRadians(90.0f)));
@@ -80,7 +79,7 @@ void GraphicsEngine::applyFilter(const Shader& filter, const Texture& source, co
 	setTexture("filterTexture", 0);
 }
 
-void GraphicsEngine::render(const GameObject& object) {
+void GraphicsEngine::render(const Entity& object) {
 	
 	m_renderProfileTimer.startInvocation();
 	getTexture("displayTexture").bindAsRenderTarget();
@@ -123,7 +122,9 @@ void GraphicsEngine::render(const GameObject& object) {
 			if (flipFaces)
 				glCullFace(GL_FRONT);
 
-			object.renderAll(m_shadowMapShader, *this, m_altCamera);
+			glEnable(GL_DEPTH_CLAMP);
+				object.renderAll(m_shadowMapShader, *this, m_altCamera);
+			glDisable(GL_DEPTH_CLAMP);
 
 			if (flipFaces)
 				glCullFace(GL_BACK);
@@ -137,7 +138,7 @@ void GraphicsEngine::render(const GameObject& object) {
 		} else {
 			m_lightMatrix = Matrix4f().initScale(Vector3f(0, 0, 0));
 			setFloat("shadowVarianceMin", 0.00002f);
-			setFloat("shadowLightBleedingReduction", 0.0f);
+			setFloat("shadowLightBleedingReduction", 0);
 		}
 
 		getTexture("displayTexture").bindAsRenderTarget();
@@ -155,7 +156,9 @@ void GraphicsEngine::render(const GameObject& object) {
 		glDisable(GL_BLEND);
 	}
 
-	setVector3f("inverseFilterTextureSize", Vector3f(1.0f / getTexture("displayTexture").getWidth(), 1.0f / getTexture("displayTexture").getHeight(), 0.0f));
+	float displayTextureAspect = (float) getTexture("displayTexture").getWidth() / (float) getTexture("displayTexture").getHeight();
+	float displayTextureHeightAdditive = displayTextureAspect * getFloat("fxaaAspectDistortion");
+	setVector3f("inverseFilterTextureSize", Vector3f(1 / (float) getTexture("displayTexture").getWidth(), 1 / ((float) getTexture("displayTexture").getHeight() + displayTextureHeightAdditive), 0));
 	m_renderProfileTimer.stopInvocation();
 
 	m_windowSyncProfileTimer.startInvocation();
