@@ -3,6 +3,7 @@
 
 #include "../components/gameObject.h"
 #include "coreEngine.h"
+#include "../util/profiling.h"
 
 class Game {
 public:
@@ -14,7 +15,8 @@ public:
 	void update(float delta);
 	void render(GraphicsEngine* graphicsEngine);
 	
-	inline GameObject& getRoot() { return m_root; }
+	inline double displayInputTime(double dividend) { return m_inputTimer.displayAndReset("Input Time: ", dividend); }
+	inline double displayUpdateTime(double dividend) { return m_updateTimer.displayAndReset("Update Time: ", dividend); }
 	
 	inline void setEngine(CoreEngine* engine) { m_root.setEngine(engine); }
 protected:
@@ -23,6 +25,8 @@ private:
 	Game(Game& game) {}
 	void operator=(Game& game) {}
 	
+	ProfileTimer m_updateTimer;
+	ProfileTimer m_inputTimer;
 	GameObject m_root;
 };
 

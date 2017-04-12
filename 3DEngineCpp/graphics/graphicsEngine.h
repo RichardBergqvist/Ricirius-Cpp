@@ -7,6 +7,7 @@
 #include "material.h"
 #include "model.h"
 #include "window.h"
+#include "../util/profiling.h"
 #include <vector>
 #include <map>
 class GameObject;
@@ -25,6 +26,9 @@ public:
 		throw uniformType + " is not supported by the rendering engine";
 	}
 
+	inline double displayRenderTime(double dividend) { return m_renderProfileTimer.displayAndReset("Render Time: ", dividend); }
+	inline double displayWindowSyncTime(double dividend) { return m_windowSyncProfileTimer.displayAndReset("Window Sync Time: ", dividend); }
+
 	inline const BaseLight& getActiveLight() const { return *m_activeLight; }
 	inline unsigned int getSamplerSlot(const std::string& samplerName) const { return m_samplerMap.find(samplerName)->second; }
 	inline const Matrix4f& getLightMatrix() const { return m_lightMatrix; }
@@ -35,6 +39,8 @@ private:
 	static const int NUM_SHADOW_MAPS = 10;
 	static const Matrix4f BIAS_MATRIX;
 
+	ProfileTimer m_renderProfileTimer;
+	ProfileTimer m_windowSyncProfileTimer;
 	Transformer m_planeTransformer;
 	Model m_plane;
 

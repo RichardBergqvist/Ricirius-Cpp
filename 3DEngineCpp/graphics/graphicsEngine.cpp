@@ -22,7 +22,7 @@ GraphicsEngine::GraphicsEngine(const Window& window) : m_plane(Model("plane.obj"
 	setFloat("fxaaReduceMin", 1.0 / 128.0F);
 	setFloat("fxaaReduceMul", 1.0 / 8.0F);
 
-	setTexture("displayTexture", Texture(m_window->getWidth(), m_window->getHeight(), 0, GL_TEXTURE_2D, GL_LINEAR, GL_RGBA, GL_RGBA, false, GL_COLOR_ATTACHMENT0));
+	setTexture("displayTexture", Texture(m_window->getWidth(), m_window->getHeight(), 0, GL_TEXTURE_2D, GL_LINEAR, GL_RGBA, GL_RGBA, true, GL_COLOR_ATTACHMENT0));
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -82,6 +82,7 @@ void GraphicsEngine::applyFilter(const Shader& filter, const Texture& source, co
 
 void GraphicsEngine::render(const GameObject& object) {
 	
+	m_renderProfileTimer.startInvocation();
 	getTexture("displayTexture").bindAsRenderTarget();
 	//m_window->bindAsRenderTarget();
 
@@ -155,5 +156,9 @@ void GraphicsEngine::render(const GameObject& object) {
 	}
 
 	setVector3f("inverseFilterTextureSize", Vector3f(1.0f / getTexture("displayTexture").getWidth(), 1.0f / getTexture("displayTexture").getHeight(), 0.0f));
+	m_renderProfileTimer.stopInvocation();
+
+	m_windowSyncProfileTimer.startInvocation();
 	applyFilter(m_fxaaFilter, getTexture("displayTexture"), 0);
+	m_windowSyncProfileTimer.stopInvocation();
 }
