@@ -40,7 +40,7 @@ private:
 
 class ShaderData : public ReferenceCounter {
 public:
-	ShaderData(const std::string& fileName);
+	ShaderData(const std::string& fileName, bool useNewShaderSystem);
 	virtual ~ShaderData();
 	
 	inline int getProgram() const { return m_program; }
@@ -62,6 +62,7 @@ private:
 	void convertFragmentShaderToGLSL150(std::string* shaderText);
 
 	static int s_supportedOpenGLLevel;
+	static std::string s_glslVersion;
 	int m_program;
 	std::vector<int>                    m_shaders;
 	std::vector<std::string>            m_uniformNames;
@@ -71,7 +72,7 @@ private:
 
 class Shader {
 public:
-	Shader(const std::string& fileName = "basicShader");
+	Shader(const std::string& fileName = "basicShader", bool useNewShaderSystem = false);
 	Shader(const Shader& shader);
 	virtual ~Shader();
 
