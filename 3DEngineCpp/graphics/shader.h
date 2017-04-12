@@ -61,7 +61,7 @@ private:
 	void convertVertexShaderToGLSL150(std::string* shaderText);
 	void convertFragmentShaderToGLSL150(std::string* shaderText);
 
-	static int s_supportedGLSLLevel;
+	static int s_supportedOpenGLLevel;
 	int m_program;
 	std::vector<int>                    m_shaders;
 	std::vector<std::string>            m_uniformNames;

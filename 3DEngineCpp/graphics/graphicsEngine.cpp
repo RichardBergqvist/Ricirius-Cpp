@@ -20,9 +20,9 @@ GraphicsEngine::GraphicsEngine(const Window& window) : m_plane(Model("plane.obj"
 
 	setFloat("fxaaSpanMax", 8.0F);
 	setFloat("fxaaReduceMin", 1.0 / 128.0F);
-	setFloat("fxaaReduceMul", 1.0 / 4.0F);
+	setFloat("fxaaReduceMul", 1.0 / 8.0F);
 
-	setTexture("displayTexture", Texture(m_window->getWidth(), m_window->getHeight(), 0, GL_TEXTURE_2D, GL_NEAREST, GL_RGBA, GL_RGBA, false, GL_COLOR_ATTACHMENT0));
+	setTexture("displayTexture", Texture(m_window->getWidth(), m_window->getHeight(), 0, GL_TEXTURE_2D, GL_LINEAR, GL_RGBA, GL_RGBA, false, GL_COLOR_ATTACHMENT0));
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 

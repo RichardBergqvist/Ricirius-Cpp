@@ -12,7 +12,7 @@
 #include "graphicsEngine.h"
 
 std::map<std::string, ShaderData*> Shader::s_resourceMap;
-int ShaderData::s_supportedGLSLLevel = 0;
+int ShaderData::s_supportedOpenGLLevel = 0;
 
 static void checkShaderError(int shader, int flag, bool isProgram, const std::string& errorMessage);
 static std::vector<UniformStruct> findUniformStructs(const std::string& shaderText);
@@ -32,20 +32,20 @@ ShaderData::ShaderData(const std::string& fileName) {
         exit(1);
     }
 
-	if (s_supportedGLSLLevel == 0) {
+	if (s_supportedOpenGLLevel == 0) {
 		int majorVersion;
 		int minorVersion;
 
 		glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
 		glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
 
-		s_supportedGLSLLevel = majorVersion * 100 + minorVersion * 10;
+		s_supportedOpenGLLevel = majorVersion * 100 + minorVersion * 10;
 	}
     
     std::string vertexShaderText = loadShader(fileName + ".vs");
     std::string fragmentShaderText = loadShader(fileName + ".fs");
     
-	if (s_supportedGLSLLevel >= 320) {
+	if (s_supportedOpenGLLevel >= 320) {
 		convertVertexShaderToGLSL150(&vertexShaderText);
 		convertFragmentShaderToGLSL150(&fragmentShaderText);
 	}
@@ -53,7 +53,7 @@ ShaderData::ShaderData(const std::string& fileName) {
     addVertexShader(vertexShaderText);
     addFragmentShader(fragmentShaderText);
 
-	std::string attributeKeyword = s_supportedGLSLLevel < 320 ? "attribute" : "in";
+	std::string attributeKeyword = s_supportedOpenGLLevel < 320 ? "attribute" : "in";
 	addAllAttributes(vertexShaderText, attributeKeyword);
     
     compileShader();
