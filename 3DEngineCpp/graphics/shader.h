@@ -54,12 +54,12 @@ private:
 	void addFragmentShader(const std::string& text);
 	void addProgram(const std::string& text, int type);
 
-	void addAllAttributes(const std::string& vertexShaderText);
+	void addAllAttributes(const std::string& vertexShaderText, const std::string& attributeKeyword);
 	void addShaderUniforms(const std::string& shaderText);
 	void addUniform(const std::string& uniformName, const std::string& uniformType, const std::vector<UniformStruct>& structs);
 	void compileShader() const;
-	void convertVertexShaderToGLSL330(std::string* shaderText);
-	void convertFragmentShaderToGLSL330(std::string* shaderText);
+	void convertVertexShaderToGLSL150(std::string* shaderText);
+	void convertFragmentShaderToGLSL150(std::string* shaderText);
 
 	static int s_supportedGLSLLevel;
 	int m_program;

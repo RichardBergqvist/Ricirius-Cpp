@@ -45,17 +45,16 @@ ShaderData::ShaderData(const std::string& fileName) {
     std::string vertexShaderText = loadShader(fileName + ".vs");
     std::string fragmentShaderText = loadShader(fileName + ".fs");
     
-	if (s_supportedGLSLLevel >= 330) {
-		convertVertexShaderToGLSL330(&vertexShaderText);
-		convertFragmentShaderToGLSL330(&fragmentShaderText);
+	if (s_supportedGLSLLevel >= 320) {
+		convertVertexShaderToGLSL150(&vertexShaderText);
+		convertFragmentShaderToGLSL150(&fragmentShaderText);
 	}
 
     addVertexShader(vertexShaderText);
     addFragmentShader(fragmentShaderText);
-    
-	if (s_supportedGLSLLevel < 330) {
-		addAllAttributes(vertexShaderText);
-	}
+
+	std::string attributeKeyword = s_supportedGLSLLevel < 320 ? "attribute" : "in";
+	addAllAttributes(vertexShaderText, attributeKeyword);
     
     compileShader();
     
@@ -211,15 +210,15 @@ static void replaceShaderVersionWith(std::string* shaderText, const std::string&
 	shaderText->replace(versionNumberStart, versionNumberEnd, newVersion);
 }
 
-void ShaderData::convertVertexShaderToGLSL330(std::string* shaderText) {
-	replaceShaderVersionWith(shaderText, "330");
+void ShaderData::convertVertexShaderToGLSL150(std::string* shaderText) {
+	replaceShaderVersionWith(shaderText, "150");
 	
 	string_ReplaceAll(shaderText, "varying", "out");
-	string_ReplaceAll(shaderText, "attribute", "layout(location = %d) in", "", 0, true);
+	string_ReplaceAll(shaderText, "attribute", "in");
 }
 
-void ShaderData::convertFragmentShaderToGLSL330(std::string* shaderText) {
-	replaceShaderVersionWith(shaderText, "330");
+void ShaderData::convertFragmentShaderToGLSL150(std::string* shaderText) {
+	replaceShaderVersionWith(shaderText, "150");
 	
 	string_ReplaceAll(shaderText, "varying", "in");
 	string_ReplaceAll(shaderText, "texture2D", "texture");
@@ -273,11 +272,9 @@ void ShaderData::addProgram(const std::string& text, int type) {
 	m_shaders.push_back(shader);
 }
 
-void ShaderData::addAllAttributes(const std::string& vertexShaderText) {
-	static const std::string ATTRIBUTE_KEY = "attribute";
-
+void ShaderData::addAllAttributes(const std::string& vertexShaderText, const std::string& attributeKeyword) {
 	int currentAttribLocation = 0;
-	size_t attributeLocation = vertexShaderText.find(ATTRIBUTE_KEY);
+	size_t attributeLocation = vertexShaderText.find(attributeKeyword);
 	while (attributeLocation != std::string::npos) {
 		bool isCommented = false;
 		size_t lastLineEnd = vertexShaderText.rfind(";", attributeLocation);
@@ -288,7 +285,7 @@ void ShaderData::addAllAttributes(const std::string& vertexShaderText) {
 		}
 
 		if (!isCommented) {
-			size_t begin = attributeLocation + ATTRIBUTE_KEY.length();
+			size_t begin = attributeLocation + attributeKeyword.length();
 			size_t end = vertexShaderText.find(";", begin);
 
 			std::string attributeLine = vertexShaderText.substr(begin + 1, end - begin - 1);
@@ -299,7 +296,7 @@ void ShaderData::addAllAttributes(const std::string& vertexShaderText) {
 			glBindAttribLocation(m_program, currentAttribLocation, attributeName.c_str());//SetAttribLocation(attributeName, currentAttribLocation);
 			currentAttribLocation++;
 		}
-		attributeLocation = vertexShaderText.find(ATTRIBUTE_KEY, attributeLocation + ATTRIBUTE_KEY.length());
+		attributeLocation = vertexShaderText.find(attributeKeyword, attributeLocation + attributeKeyword.length());
 	}
 }
 
