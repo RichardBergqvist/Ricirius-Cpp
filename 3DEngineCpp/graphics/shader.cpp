@@ -1,4 +1,8 @@
 #include "shader.h"
+#include "../util/profiling.h"
+#include "lighting.h"
+#include "../util/util.h"
+#include "graphicsEngine.h"
 #include <cassert>
 #include <fstream>
 #include <iostream>
@@ -6,10 +10,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <sstream>
-
-#include "lighting.h"
-#include "../util/util.h"
-#include "graphicsEngine.h"
 
 std::map<std::string, ShaderData*> Shader::s_resourceMap;
 int ShaderData::s_supportedOpenGLLevel = 0;
@@ -22,6 +22,10 @@ static std::vector<TypedData> findUniformStructComponents(const std::string& ope
 static std::string loadShader(const std::string& fileName);
 
 ShaderData::ShaderData(const std::string& fileName) {
+	std::string actualFileName = fileName;
+	#if PROFILING_DISABLE_SHADING != 0
+		actualFileName = "nullShader";
+	#endif
 	m_program = glCreateProgram();
 
 	if (m_program == 0)  {
@@ -59,7 +63,7 @@ ShaderData::ShaderData(const std::string& fileName) {
 		}
 	}
 
-	std::string shaderText = loadShader(fileName + ".glsl");
+	std::string shaderText = loadShader(actualFileName + ".glsl");
     
 	std::string vertexShaderText = "#version " + s_glslVersion + "\n#define VS_BUILD\n#define GLSL_VERSION " + s_glslVersion + "\n" + shaderText;
 	std::string fragmentShaderText = "#version " + s_glslVersion + "\n#define FS_BUILD\n#define GLSL_VERSION " + s_glslVersion + "\n" + shaderText;

@@ -1,4 +1,5 @@
 #include "model.h"
+#include "../util/profiling.h"
 #include <GL/glew.h>
 #include <iostream>
 
@@ -165,7 +166,9 @@ ModelData::~ModelData() {
 void ModelData::render() const {
 	glBindVertexArray(m_vertexArrayObject);
 	
-	glDrawElements(GL_TRIANGLES, m_renderCount, GL_UNSIGNED_INT, 0);
+	#if PROFILING_DISABLE_MODEL_RENDERING == 0
+		glDrawElements(GL_TRIANGLES, m_renderCount, GL_UNSIGNED_INT, 0);
+	#endif
 }
 
 Model::Model(const std::string& fileName) : m_fileName(fileName), m_modelData(0) {

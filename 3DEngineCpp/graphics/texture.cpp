@@ -1,6 +1,7 @@
 #include "texture.h"
 #include "../util/stb_image.h"
 #include "../util/math3d.h"
+#include "../util/profiling.h"
 #include <iostream>
 #include <cassert>
 #include <cstring>
@@ -11,8 +12,14 @@ TextureData::TextureData(GLenum textureTarget, int width, int height, int numTex
 	m_textureID = new GLuint[numTextures];
 	m_textureTarget = textureTarget;
 	m_numTextures = numTextures;
-	m_width = width;
-	m_height = height;
+
+	#if PROFILING_SET_2x2_TEXTURE == 0
+		m_width = width;
+		m_height = height;
+	#else
+		m_width = 2;
+		m_height = 2
+	#endif
 	m_frameBuffer = 0;
 	m_renderBuffer = 0;
 
@@ -107,7 +114,12 @@ void TextureData::bind(int textureNum) const {
 void TextureData::bindAsRenderTarget() const {
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
-	glViewport(0, 0, m_width, m_height);
+
+	#if PROFILING_SET_1x1_VIEWPORT == 0
+		glViewport(0, 0, m_width, m_height);
+	#else
+		glViewport(0, 0, 1, 1);
+	#endif
 }
 
 Texture::Texture(const std::string& fileName, GLenum textureTarget, GLfloat filter, GLenum internalFormat, GLenum format, bool clamp, GLenum attachment) {

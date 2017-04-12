@@ -1,4 +1,5 @@
 #include "window.h"
+#include "../util/profiling.h"
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 
@@ -97,7 +98,12 @@ void Window::swapBuffers() {
 void Window::bindAsRenderTarget() const {
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, getWidth(), getHeight());
+
+	#if PROFILING_SET_1x1_VIEWPORT == 0
+		glViewport(0, 0, getWidth(), getHeight());
+	#else
+		glViewport(0, 0, 1, 1);
+	#endif
 }
 
 void Window::setFullScreen(bool value) {
