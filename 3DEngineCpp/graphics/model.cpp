@@ -160,6 +160,7 @@ ModelData::ModelData(const IndexedModel& model) : ReferenceCounter(), m_renderCo
 }
 
 ModelData::~ModelData() { 
+	glDeleteBuffers(NUM_BUFFERS, m_vertexArrayBuffers);
 	glDeleteVertexArrays(1, &m_vertexArrayObject);
 }
 
@@ -186,7 +187,7 @@ Model::Model(const std::string& fileName) : m_fileName(fileName), m_modelData(0)
 			aiProcess_CalcTangentSpace);
 
 		if (!scene) {
-			std::cout << "Mesh load failed!: " << fileName << std::endl;
+			std::cout << "Model load failed!: " << fileName << std::endl;
 			assert(0 == 0);
 		}
 

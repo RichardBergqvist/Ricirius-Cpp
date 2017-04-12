@@ -1,6 +1,9 @@
 #include "3DEngine.h"
+#include "../util/testing.h"
 #include "../components/freeLook.h"
 #include "../components/freeMove.h"
+#include "../components/physicsEngineComponent.h"
+#include "../components/physicsObjectComponent.h"
 
 class TestGame : public Game {
 public:
@@ -27,16 +30,33 @@ void TestGame::init(const Window& window) {
 	}
 	Model customModel("square", square.finalize());
 
-	addToScene((new Entity(Vector3f(0, -1, 5), Quaternion(), 32.0f))->addComponent(new ModelRenderer(Model("terrain02.obj"), Material("bricks"))));
-	addToScene((new Entity(Vector3f(7, 0, 7)))->addComponent(new PointLight(Vector3f(0, 1, 0), 0.4f, Attenuation(0, 0, 1))));
-	addToScene((new Entity(Vector3f(20, -11, 5), Quaternion(Vector3f(1, 0, 0), toRadians(-60.0f)) * Quaternion(Vector3f(0, 1, 0), toRadians(90.0f))))->addComponent(new SpotLight(Vector3f(0, 1, 1), 0.4f, Attenuation(0, 0, 0.02f), toRadians(91.1f), 7, 1.0f, 0.5f)));
+	//addToScene((new Entity(Vector3f(0, -1, 5), Quaternion(), 32.0f))->addComponent(new ModelRenderer(Model("terrain02.obj"), Material("bricks"))));
+	//addToScene((new Entity(Vector3f(7, 0, 7)))->addComponent(new PointLight(Vector3f(0, 1, 0), 0.4f, Attenuation(0, 0, 1))));
+	//addToScene((new Entity(Vector3f(20, -11, 5), Quaternion(Vector3f(1, 0, 0), toRadians(-60.0f)) * Quaternion(Vector3f(0, 1, 0), toRadians(90.0f))))->addComponent(new SpotLight(Vector3f(0, 1, 1), 0.4f, Attenuation(0, 0, 0.02f), toRadians(91.1f), 7, 1.0f, 0.5f)));
 	addToScene((new Entity(Vector3f(), Quaternion(Vector3f(1, 0, 0), toRadians(-45))))->addComponent(new DirectionalLight(Vector3f(1, 1, 1), 0.4f, 10, 80.0f, 1.0f)));
 	addToScene((new Entity(Vector3f(0, 2, 0), Quaternion(Vector3f(0, 1, 0), 0.4f), 1.0f))->addComponent(new ModelRenderer(Model("plane3.obj"), Material("bricks2")))->addChild((new Entity(Vector3f(0, 0, 25)))->addComponent(new ModelRenderer(Model("plane3.obj"), Material("bricks2")))->addChild((new Entity())->addComponent(new CameraComponent(Matrix4f().initPerspective(toRadians(70.0f), window.getAspect(), 0.1f, 1000.0f)))->addComponent(new FreeLook(window.getCenter()))->addComponent(new FreeMove(10)))));
-	addToScene((new Entity(Vector3f(24, -2, 5), Quaternion(Vector3f(0, 1, 0), toRadians(30.0f))))->addComponent(new ModelRenderer(Model("cube.obj"), Material("bricks2"))));
-	addToScene((new Entity(Vector3f(0, 0, 7), Quaternion(), 1.0f))->addComponent(new ModelRenderer(Model("square"), Material("bricks2"))));
+	//addToScene((new Entity(Vector3f(24, -2, 5), Quaternion(Vector3f(0, 1, 0), toRadians(30.0f))))->addComponent(new ModelRenderer(Model("sphere.obj"), Material("bricks"))));
+	//addToScene((new Entity(Vector3f(0, 0, 7), Quaternion(), 1.0f))->addComponent(new ModelRenderer(Model("square"), Material("bricks2"))));
+
+	PhysicsEngine physicsEngine;
+	
+	physicsEngine.addObject(PhysicsObject(Vector3f(0.0f, 0.0f, 0.0f), Vector3f(1.0f, 1.0f, 0.0f)));
+	physicsEngine.addObject(PhysicsObject(Vector3f(20.0f, 30.0f, -9.0f), Vector3f(-0.8f, -0.9f, 0.7f)));
+	
+	PhysicsEngineComponent* physicsEngineComponent = new PhysicsEngineComponent(physicsEngine);
+	
+	for (unsigned int i = 0; i < physicsEngineComponent->getPhysicsEngine().getNumObjects(); i++) {
+		addToScene((new Entity())->addComponent(new PhysicsObjectComponent(&physicsEngineComponent->getPhysicsEngine().getObject(i)))->addComponent(new ModelRenderer(Model("sphere.obj"), Material("bricks"))));
+	}
+	
+	addToScene((new Entity())->addComponent(physicsEngineComponent));
 }
 
+#include <iostream>
+
 int main() {
+	Testing::runAllTests();
+
 	TestGame game;
 	Window window(800, 600, "Ricirius");
 	GraphicsEngine renderer(window);
