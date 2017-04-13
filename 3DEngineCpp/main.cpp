@@ -40,13 +40,13 @@ void TestGame::init(const Window& window) {
 
 	PhysicsEngine physicsEngine;
 	
-	physicsEngine.addObject(PhysicsObject(Vector3f(0.0f, 0.0f, 0.0f), Vector3f(1.0f, 1.0f, 0.0f)));
-	physicsEngine.addObject(PhysicsObject(Vector3f(20.0f, 30.0f, -9.0f), Vector3f(-0.8f, -0.9f, 0.7f)));
+	physicsEngine.addObject(PhysicsObject(Vector3f(0, 0, 0), Vector3f(0, 0, 1), 1));
+	physicsEngine.addObject(PhysicsObject(Vector3f(0, 0, 10), Vector3f(0, 0, -1), 2));
 	
 	PhysicsEngineComponent* physicsEngineComponent = new PhysicsEngineComponent(physicsEngine);
 	
 	for (unsigned int i = 0; i < physicsEngineComponent->getPhysicsEngine().getNumObjects(); i++) {
-		addToScene((new Entity())->addComponent(new PhysicsObjectComponent(&physicsEngineComponent->getPhysicsEngine().getObject(i)))->addComponent(new ModelRenderer(Model("sphere.obj"), Material("bricks"))));
+		addToScene((new Entity(Vector3f(0, 0, 0), Quaternion(), physicsEngineComponent->getPhysicsEngine().getObject(i).getRadius()))->addComponent(new PhysicsObjectComponent(&physicsEngineComponent->getPhysicsEngine().getObject(i)))->addComponent(new ModelRenderer(Model("sphere.obj"), Material("bricks"))));
 	}
 	
 	addToScene((new Entity())->addComponent(physicsEngineComponent));

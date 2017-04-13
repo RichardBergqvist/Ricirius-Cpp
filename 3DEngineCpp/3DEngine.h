@@ -6,7 +6,7 @@
 #include "../components/transformer.h"
 #include "../components/camera.h"
 #include "../graphics/lighting.h"
-#include "../components/gameObject.h"
+#include "../components/entity.h"
 #include "../graphics/modelRenderer.h"
 #include "../graphics/window.h"
 #include "../core/coreEngine.h"
