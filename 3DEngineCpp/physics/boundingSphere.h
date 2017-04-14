@@ -3,10 +3,11 @@
 
 #include "../util/math3d.h"
 #include "intersectData.h"
+#include "collider.h"
 
-class BoundingSphere {
+class BoundingSphere : public Collider {
 public:
-	BoundingSphere(const Vector3f& center, float radius) : m_center(center), m_radius(radius) {}
+	BoundingSphere(const Vector3f& center, float radius) : Collider(Collider::TYPE_SPHERE), m_center(center), m_radius(radius) {}
 
 	IntersectData intersectBoundingSphere(const BoundingSphere& other) const;
 
@@ -15,8 +16,8 @@ public:
 
 	static void test();
 private: 
-	const Vector3f m_center;
-	const float m_radius;
+	Vector3f m_center;
+	float m_radius;
 };
 
 #endif

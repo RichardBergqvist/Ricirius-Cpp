@@ -14,7 +14,7 @@ void PhysicsEngine::simulate(float delta) {
 void PhysicsEngine::handleCollisions() {
 	for (unsigned int i = 0; i < m_objects.size(); i++) {
 		for (unsigned int j = i + 1; j < m_objects.size(); j++) {
-			IntersectData intersectData = m_objects[i].getBoundingSphere().intersectBoundingSphere(m_objects[j].getBoundingSphere());
+			IntersectData intersectData = m_objects[i].getBoundingSphere().intersect(m_objects[j].getBoundingSphere());
 
 			if (intersectData.getDoesIntersect()) {
 				m_objects[i].setVelocity(m_objects[i].getVelocity() * -1);
